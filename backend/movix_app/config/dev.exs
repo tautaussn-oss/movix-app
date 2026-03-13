@@ -1,11 +1,34 @@
 import Config
 
+case File.read(".env") do
+  {:ok, contents} ->
+    contents
+    |> String.split("\n", trim: true)
+    |> Enum.each(fn line ->
+      case String.split(line, "=", parts: 2) do
+        [key, value] ->
+          System.put_env(String.trim(key), String.trim(value)) |> dbg()
+
+        _ ->
+          :ok
+      end
+    end)
+
+  {:error, _reason} ->
+    :ok
+end
+
+database_url =
+  System.get_env("DATABASE_URL") ||
+    raise """
+    environment variable DATABASE_URL is missing.
+    For example: ecto://USER:PASS@HOST/DATABASE
+    """
+
 # Configure your database
 config :movix_app, MovixApp.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "movix_app_dev",
+  url: database_url,
+  ssl: true,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
