@@ -54,7 +54,6 @@ defmodule MovixAppWeb.Endpoint do
   plug(Plug.MethodOverride)
   plug(Plug.Head)
   plug(Plug.Session, @session_options)
-  plug(MovixAppWeb.Router)
-
   plug(CORSPlug, origin: "*")
+  plug(MovixAppWeb.Router)
 end
