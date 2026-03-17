@@ -23,7 +23,7 @@ case File.read(".env") do
     |> Enum.each(fn line ->
       case String.split(line, "=", parts: 2) do
         [key, value] ->
-          System.put_env(String.trim(key), String.trim(value)) |> dbg()
+          System.put_env(String.trim(key), String.trim(value))
 
         _ ->
           :ok
