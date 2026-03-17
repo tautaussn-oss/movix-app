@@ -1,14 +1,12 @@
-import { MovieCard } from '@/components/MovieCard';
-import movies from '@/data/movies.json'
+import movies from '@/data/movies.json';
+import { MovieGrid } from '@/components/MovieGrid';
 
 export default function Home() {
+  const filtered = movies.filter((movie) => movie.featured);
   return (
     <div className="">
-      <main className="">
-        <div className='grid grid-cols-3 gap-5'>
-          {movies.filter(movie=>movie.featured).map(movie=><MovieCard key={movie.id} movie={movie}/>)}
-        </div>
-        
+      <main className="flex flex-col gap-5">
+        <MovieGrid movies={filtered} />
       </main>
     </div>
   );
