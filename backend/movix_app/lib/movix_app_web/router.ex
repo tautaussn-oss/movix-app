@@ -18,6 +18,7 @@ defmodule MovixAppWeb.Router do
     pipe_through(:api)
 
     get("/movies", MoviesController, :index)
+    get("/movies/:id", MoviesController, :show)
   end
 
   scope "/", MovixAppWeb do
@@ -25,11 +26,6 @@ defmodule MovixAppWeb.Router do
 
     get("/", PageController, :home)
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", MovixAppWeb do
-  #   pipe_through :api
-  # end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:movix_app, :dev_routes) do
