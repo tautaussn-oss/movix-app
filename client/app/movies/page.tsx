@@ -1,18 +1,21 @@
 'use client';
-import { GenreSelect } from '@/components/GenreSelect';
 import { MovieGrid } from '@/components/MovieGrid';
 import { SearchBar } from '@/components/SearchBar';
-import { SortSelect } from '@/components/SortSelect';
+import { SelectBar } from '@/components/SelectBar';
 import movies from '@/data/movies.json';
-import { SortingType } from '@/types/movies';
 import { useState } from 'react';
+
+const sortOptions = ['A-Z', 'Rating (high-low)', 'Year (Newest)'];
+const yearOptions = ['before 90s', '90s', '00s', '10s', '20s'];
 
 export default function MoviesPage() {
   const moviesList = movies;
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortOption, setSortOption] = useState<SortingType>('');
+  const [sortOption, setSortOption] = useState<string>('');
   const [selectedGenre, setSelectedGenre] = useState<string>('');
+  const [selectedYear, setSelectedYear] = useState<string>('');
   const genres = [...new Set(movies.flatMap((movie) => movie.genres))];
+
   // useEffect(() => {
   //     const fetchMovies = async () => {
   //         try {
@@ -34,11 +37,14 @@ export default function MoviesPage() {
   const handleSearch = (title: string) => {
     setSearchQuery(title);
   };
-  const handleSort = (sortingType: SortingType) => {
+  const handleSort = (sortingType: string) => {
     setSortOption(sortingType);
   };
   const handleGenreFilter = (genre: string) => {
     setSelectedGenre(genre);
+  };
+  const handleYearFilter = (year: string) => {
+    setSelectedYear(year);
   };
   const filteredMovies =
     searchQuery === ''
@@ -51,21 +57,35 @@ export default function MoviesPage() {
       ? filteredMovies
       : sortOption === 'A-Z'
         ? [...filteredMovies].sort((a, b) => a.title.localeCompare(b.title))
-        : sortOption === 'high-low'
+        : sortOption === 'Rating (high-low)'
           ? [...filteredMovies].sort((a, b) => b.rating - a.rating)
           : [...filteredMovies].sort((a, b) => b.year - a.year);
   const filteredByGenre =
     selectedGenre !== ''
       ? sortedMovies.filter((movie) => movie.genres.includes(selectedGenre))
       : sortedMovies;
+
+  const filteredByYear =
+    selectedYear === ''
+      ? filteredByGenre
+      : selectedYear === 'before 90s'
+        ? filteredByGenre.filter((movie) => movie.year < 1990)
+        : selectedYear === '90s'
+          ? filteredByGenre.filter((movie) => movie.year >= 1990 && movie.year < 2000)
+          : selectedYear === '00s'
+            ? filteredByGenre.filter((movie) => movie.year >= 2000 && movie.year < 2010)
+            : selectedYear === '10s'
+              ? filteredByGenre.filter((movie) => movie.year >= 2010 && movie.year < 2020)
+              : filteredByGenre.filter((movie) => movie.year >= 2020);
   return (
     <div className="flex flex-col items-center gap-5">
       <SearchBar onSearch={handleSearch} />
       <div className="flex flex-col items-center md:flex-row justify-evenly gap-3 w-full">
-        <SortSelect onSort={handleSort} />
-        <GenreSelect onSelect={handleGenreFilter} genres={genres} />
+        <SelectBar type={'sort'} options={sortOptions} onSelect={handleSort} />
+        <SelectBar type={'genre'} onSelect={handleGenreFilter} options={genres} />
+        <SelectBar type="year" onSelect={handleYearFilter} options={yearOptions} />
       </div>
-      <MovieGrid movies={filteredByGenre} />
+      <MovieGrid movies={filteredByYear} />
     </div>
   );
 }

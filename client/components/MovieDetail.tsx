@@ -15,9 +15,7 @@ export function MovieDetail({ movie }: { movie: Movie }) {
       <div className=" flex flex-col justify-between">
         <h1 className="text-3xl font-bold text-black m-3">{movie.title}</h1>
         <p className=" mx-3">
-          {movie.year},{' '}
-          {movie.genres.join(' ')}
-          , {movie.duration} minutes
+          {movie.year}, {movie.genres.join(' ')}, {movie.duration} minutes
         </p>
         <p className=" mx-3">{movie.description}</p>
         <p className=" mx-3">Rating: {movie.rating}</p>

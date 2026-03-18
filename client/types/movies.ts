@@ -13,11 +13,8 @@ export interface Movie {
 export type SearchBarProp = {
   onSearch: (value: string) => void;
 };
-export type SortSelectProp = {
-  onSort: (value: SortingType) => void;
-};
-export type SortingType = '' | 'A-Z' | 'high-low' | 'newest-first';
 
-export type SelectGenreProp = {
+export type SelectBarProp = {
   onSelect: (value: string) => void;
 };
+export type SelectType = 'sort' | 'genre' | 'year';

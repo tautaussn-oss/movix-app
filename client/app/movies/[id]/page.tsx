@@ -6,7 +6,7 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
   const movie = movies.find((movie) => movie.id === Number(id));
   if (movie === undefined) return <p>Movie not found!</p>;
   return (
-    <div className='flex justify-center w-full'>
+    <div className="flex justify-center w-full">
       <MovieDetail movie={movie} />
     </div>
   );
