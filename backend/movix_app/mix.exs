@@ -67,7 +67,8 @@ defmodule MovixApp.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:cors_plug, "~> 3.0"},
-      {:dotenv, "~> 3.0"}
+      {:dotenv, "~> 3.0"},
+      {:cloudex, "~> 1.4"}
     ]
   end
 

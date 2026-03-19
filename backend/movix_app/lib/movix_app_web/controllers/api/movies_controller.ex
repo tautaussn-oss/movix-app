@@ -13,4 +13,40 @@ defmodule MovixAppWeb.Api.MoviesController do
     movie = Movies.get_movie!(id)
     render(conn, :show, movie: movie)
   end
+
+  def create(conn, params) do
+    with {:ok, poster_url} <- upload_to_cloudinary(params["poster"]),
+         attrs <- Map.put(params, "poster", poster_url),
+         {:ok, movie} <- Movies.create_movie(attrs) do
+      movie = Movies.get_movie!(movie.id)
+
+      conn
+      |> put_status(:created)
+      |> render(:show, movie: movie)
+    else
+      {:error, :director_not_found} ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{error: "Director not found"})
+
+      {:error, changeset} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> json(%{errors: changeset})
+
+      {:error, reason} ->
+        conn
+        |> put_status(:bad_request)
+        |> json(%{error: inspect(reason)})
+    end
+  end
+
+  defp upload_to_cloudinary(%Plug.Upload{path: path}) do
+    case Cloudex.upload(path, folder: "movies") do
+      {:ok, result} -> {:ok, result.secure_url}
+      {:error, err} -> {:error, err}
+    end
+  end
+
+  defp upload_to_cloudinary(_), do: {:error, :no_file}
 end

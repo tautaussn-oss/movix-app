@@ -19,6 +19,9 @@ defmodule MovixAppWeb.Router do
 
     get("/movies", MoviesController, :index)
     get("/movies/:id", MoviesController, :show)
+    get("/genres", GenresController, :index)
+    get("/genres/:id", GenresController, :show)
+    post("/movies", MoviesController, :create)
   end
 
   scope "/", MovixAppWeb do

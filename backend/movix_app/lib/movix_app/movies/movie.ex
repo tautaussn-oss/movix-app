@@ -29,7 +29,8 @@ defmodule MovixApp.Movies.Movie do
       :year,
       :duration,
       :poster,
-      :featured
+      :featured,
+      :director_id
     ])
     |> validate_required([
       :title,
@@ -37,7 +38,9 @@ defmodule MovixApp.Movies.Movie do
       :year,
       :duration,
       :poster,
-      :featured
+      :featured,
+      :director_id
     ])
+    |> assoc_constraint(:director)
   end
 end

@@ -22,6 +22,33 @@ config :movix_app, MovixAppWeb.Endpoint,
   pubsub_server: MovixApp.PubSub,
   live_view: [signing_salt: "rAE+Sq+K"]
 
+case File.read(".env") do
+  {:ok, contents} ->
+    contents
+    |> String.split("\n", trim: true)
+    |> Enum.each(fn line ->
+      case String.split(line, "=", parts: 2) do
+        [key, value] ->
+          System.put_env(String.trim(key), String.trim(value))
+
+        _ ->
+          :ok
+      end
+    end)
+
+  {:error, _reason} ->
+    :ok
+end
+
+ckey = System.get_env("CLOUDINARY_API_KEY")
+csecret = System.get_env("CLOUDINARY_API_SECRET")
+cname = System.get_env("CLOUDINARY_API_CLOUD_NAME")
+
+config :cloudex,
+  api_key: ckey,
+  secret: csecret,
+  cloud_name: cname
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

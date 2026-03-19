@@ -14,10 +14,12 @@ defmodule MovixApp.Ratings.Rating do
   def changeset(rating, attrs) do
     rating
     |> cast(attrs, [
-      :rating
+      [:rating, :movie_id]
     ])
     |> validate_required([
-      :rating
+      [:rating, :movie_id]
     ])
+    |> validate_number(:rating, greater_than: 0, less_than_or_equal_to: 10)
+    |> assoc_constraint(:movie)
   end
 end
