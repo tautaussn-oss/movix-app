@@ -41,9 +41,9 @@ defmodule MovixAppWeb.Api.MoviesController do
     end
   end
 
-  defp upload_to_cloudinary(%Plug.Upload{path: path}) do
+  defp upload_to_cloudinary(slika) do
     try do
-      case Cloudex.upload(path, %{folder: "movies"}) do
+      case Cloudex.upload(slika, %{folder: "movies"}) do
         {:ok, result} -> {:ok, result.secure_url}
         {:error, err} -> {:error, err}
       end
