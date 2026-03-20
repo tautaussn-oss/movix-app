@@ -4,11 +4,10 @@ defmodule MovixApp.Genres do
 
   def list_all do
     Repo.all(Genre)
-    |> Repo.preload(:movies)
   end
 
   def get_genre!(id) do
     Repo.get!(Genre, id)
-    |> Repo.preload(:movies)
+    |> Repo.preload(movies: [:ratings, :genres, :director])
   end
 end

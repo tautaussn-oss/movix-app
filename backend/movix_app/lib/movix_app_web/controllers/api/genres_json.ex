@@ -1,10 +1,12 @@
 defmodule MovixAppWeb.Api.GenresJSON do
+  alias MovixAppWeb.Api.MoviesJSON
+
   def index(%{genres: genres}) do
     %{
       genres:
         for(
           genre <- genres,
-          do: data(genre)
+          do: datag(genre)
         )
     }
   end
@@ -13,11 +15,18 @@ defmodule MovixAppWeb.Api.GenresJSON do
     data(genre)
   end
 
-  defp data(genre) do
+  defp datag(genre) do
     %{
       id: genre.id,
       genre: genre.genre
-      # movies:
+    }
+  end
+
+  defp data(genre) do
+    %{
+      id: genre.id,
+      genre: genre.genre,
+      movies: Enum.map(genre.movies, fn m -> MoviesJSON.data_movie(m) end)
     }
   end
 end

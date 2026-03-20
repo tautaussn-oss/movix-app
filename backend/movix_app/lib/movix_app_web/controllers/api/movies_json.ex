@@ -4,16 +4,16 @@ defmodule MovixAppWeb.Api.MoviesJSON do
       movies:
         for(
           movie <- movies,
-          do: data(movie)
+          do: data_movie(movie)
         )
     }
   end
 
   def show(%{movie: movie}) do
-    data(movie)
+    data_movie(movie)
   end
 
-  defp data(movie) do
+  def data_movie(movie) do
     rating_values = Enum.map(movie.ratings, fn r -> r.rating end)
 
     average =
