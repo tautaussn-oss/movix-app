@@ -31,7 +31,7 @@ defmodule MovixAppWeb.Api.MoviesJSON do
       poster: movie.poster,
       featured: movie.featured,
       genres: Enum.map(movie.genres, fn g -> g.genre end),
-      rating: Float.round(average, 1),
+      rating: average,
       director: "#{movie.director.name} #{movie.director.surname}"
     }
   end

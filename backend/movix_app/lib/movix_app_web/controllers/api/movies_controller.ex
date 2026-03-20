@@ -22,26 +22,22 @@ defmodule MovixAppWeb.Api.MoviesController do
 
       conn
       |> put_status(:created)
-
-      # |> render(:show, movie: movie)
+      |> render(:show, movie: movie)
     else
       {:error, :director_not_found} ->
         conn
         |> put_status(:bad_request)
-
-      # |> json(%{error: "Director not found"})
+        |> json(%{error: "Director not found"})
 
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-
-      # |> json(%{errors: changeset})
+        |> json(%{errors: changeset})
 
       {:error, reason} ->
         conn
         |> put_status(:bad_request)
-
-        # |> json(%{error: inspect(reason)})
+        |> json(%{error: inspect(reason)})
     end
   end
 
