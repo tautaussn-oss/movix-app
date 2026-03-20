@@ -28,9 +28,39 @@ defmodule MovixApp.Movies do
     Repo.all(from(g in Genre, where: g.genre in ^names))
   end
 
+  # defp normalize_attrs(attrs) do
+  #   attrs
+  #   |> Map.update("year", nil, &parse_int/1)
+  #   |> Map.update("duration", nil, &parse_int/1)
+  #   |> Map.update("featured", false, &parse_bool/1)
+  # end
+
+  # defp parse_int(nil), do: nil
+  # defp parse_int(val) when is_integer(val), do: val
+
+  # defp parse_int(val) when is_binary(val) do
+  #   case Integer.parse(val) do
+  #     {int, _} -> int
+  #     :error -> nil
+  #   end
+  # end
+
+  # defp parse_bool(val) when val in [true, "true", "1", 1, "on"], do: true
+  # defp parse_bool(_), do: false
+
   def create_movie(attrs) do
-    genres_names = Map.get(attrs, "genres", [])
+    genres_names =
+      case Map.get(attrs, "genres") do
+        nil -> []
+        list when is_list(list) -> list
+        single -> [single]
+      end
+
     director_name = Map.get(attrs, "director")
+
+    # attrs =
+    #   attrs
+    #   |> normalize_attrs()
 
     with {:ok, director} <- get_director_by_full_name(director_name),
          genres <- get_genres_by_names(genres_names) do
