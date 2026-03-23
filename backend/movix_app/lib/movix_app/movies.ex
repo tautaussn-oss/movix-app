@@ -95,6 +95,10 @@ defmodule MovixApp.Movies do
         |> Map.put("director_id", director.id)
         |> Map.drop(["director", "genres"])
 
+      if Map.has_key?(attrs, "poster") && movie.public_id_cloudinary do
+        delete_from_cloudinary(movie.public_id_cloudinary)
+      end
+
       movie
       |> Movie.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:genres, genres)
