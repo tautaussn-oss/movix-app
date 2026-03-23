@@ -53,7 +53,7 @@ defmodule MovixAppWeb.Api.MoviesController do
            params
            |> Map.put("poster", url)
            |> Map.put("public_id_cloudinary", public_id),
-         {:ok, movie} <- Movies.update_movie(attrs) do
+         {:ok, movie} <- Movies.update_movie(movie, attrs) do
       movie = Movies.get_movie!(movie.id)
 
       conn
