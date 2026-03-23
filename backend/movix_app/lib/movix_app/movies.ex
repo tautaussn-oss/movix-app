@@ -96,7 +96,7 @@ defmodule MovixApp.Movies do
         |> Map.drop(["director", "genres"])
 
       if Map.has_key?(attrs, "poster") && movie.public_id_cloudinary do
-        delete_from_cloudinary(movie.public_id_cloudinary)
+        MoviesController.delete_from_cloudinary(movie.public_id_cloudinary)
       end
 
       movie
