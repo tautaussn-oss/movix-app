@@ -111,8 +111,11 @@ defmodule MovixAppWeb.Api.MoviesController do
 
   def delete_from_cloudinary(public_id) do
     case Cloudex.delete(public_id) do
-      {:ok, _} -> :ok
-      {:error, _} -> :ok
+      {:ok, _} ->
+        :ok
+
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 end
