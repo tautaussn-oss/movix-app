@@ -12,10 +12,16 @@ defmodule MovixApp.Movies.Movie do
     field(:duration, :integer)
     field(:poster, :string)
     field(:featured, :boolean)
+    field(:public_id_cloudinary)
 
-    many_to_many(:genres, Genre, join_through: "movie_genres", on_replace: :delete)
+    many_to_many(:genres, Genre,
+      join_through: "movie_genres",
+      on_replace: :delete,
+      on_delete: :delete_all
+    )
+
     belongs_to(:director, Director)
-    has_many(:ratings, Rating)
+    has_many(:ratings, Rating, on_delete: :delete_all)
 
     timestamps(type: :utc_datetime)
   end
@@ -29,6 +35,7 @@ defmodule MovixApp.Movies.Movie do
       :year,
       :duration,
       :poster,
+      :public_id_cloudinary,
       :featured,
       :director_id
     ])
@@ -38,6 +45,7 @@ defmodule MovixApp.Movies.Movie do
       :year,
       :duration,
       :poster,
+      :public_id_cloudinary,
       :featured,
       :director_id
     ])

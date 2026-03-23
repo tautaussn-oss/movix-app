@@ -15,8 +15,12 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def create(conn, params) do
-    with {:ok, poster_url} <- upload_to_cloudinary(params["poster"]),
-         attrs <- Map.put(params, "poster", poster_url),
+    with {:ok, %{url: poster_url, public_id: public_id}} <-
+           upload_to_cloudinary(params["poster"]),
+         attrs <-
+           params
+           |> Map.put("poster", poster_url)
+           |> Map.put("public_id_cloudinary", public_id),
          {:ok, movie} <- Movies.create_movie(attrs) do
       movie = Movies.get_movie!(movie.id)
 
@@ -34,19 +38,74 @@ defmodule MovixAppWeb.Api.MoviesController do
         |> put_status(:unprocessable_entity)
         |> json(%{errors: changeset})
 
-      {:error, reason} ->
+        # {:error, reason} ->
+        #   conn
+        #   |> put_status(:bad_request)
+        #   |> json(%{error: inspect(reason)})
+    end
+  end
+
+  def update(conn, %{"id" => id} = params) do
+    movie = Movies.get_movie!(id)
+
+    with {:ok, attrs} <- handle_poster_update(movie, params),
+         {:ok, movie} <- Movies.update_movie(movie, attrs) do
+      movie = Movies.get_movie!(movie.id)
+
+      conn
+      |> put_status(:ok)
+      |> render(:show, movie: movie)
+    else
+      {:error, err} ->
         conn
-        |> put_status(:bad_request)
-        |> json(%{error: inspect(reason)})
+        |> put_status(:unprocessable_entity)
+        |> json(%{error: err})
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    movie = Movies.get_movie!(id)
+
+    case Movies.delete_movie(movie) do
+      {:ok, _} ->
+        send_resp(conn, :no_content, "")
+
+      {:error, err} ->
+        conn
+        |> put_status(:internal_server_error)
+        |> json(%{error: "Delete failed", reason: inspect(err)})
     end
   end
 
   defp upload_to_cloudinary(%Plug.Upload{path: path}) do
     case Cloudex.upload(path, %{folder: "movies"}) do
-      {:ok, result} -> {:ok, result.secure_url}
+      {:ok, result} -> %{url: result.secure_url, public_id: result.public_id}
       {:error, err} -> {:error, err}
     end
   end
 
   defp upload_to_cloudinary(_), do: {:error, :no_file}
+
+  defp handle_poster_update(movie, %{"poster" => %Plug.Upload{} = file} = params) do
+    with {:ok, upload} <- upload_to_cloudinary(file),
+         :ok <- delete_from_cloudinary(movie.public_id) do
+      {:ok,
+       params
+       |> Map.put("poster", upload.url)
+       |> Map.put("public_id_cloudinary", upload.public_id)}
+    end
+  end
+
+  defp handle_poster_update(_movie, params) do
+    {:ok, params}
+  end
+
+  def delete_from_cloudinary(nil), do: :ok
+
+  def delete_from_cloudinary(public_id) do
+    case Cloudex.delete(public_id) do
+      {:ok, _} -> :ok
+      {:error, _} -> :ok
+    end
+  end
 end
