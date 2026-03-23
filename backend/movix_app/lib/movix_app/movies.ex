@@ -79,9 +79,27 @@ defmodule MovixApp.Movies do
   end
 
   def update_movie(movie, attrs) do
-    movie
-    |> Movie.changeset(attrs)
-    |> Repo.update()
+    genres_names =
+      case Map.get(attrs, "genres") do
+        nil -> []
+        list when is_list(list) -> list
+        single -> [single]
+      end
+
+    director_name = Map.get(attrs, "director")
+
+    with {:ok, director} <- get_director_by_full_name(director_name),
+         genres <- get_genres_by_names(genres_names) do
+      attrs =
+        attrs
+        |> Map.put("director_id", director.id)
+        |> Map.drop(["director", "genres"])
+
+      movie
+      |> Movie.changeset(attrs)
+      |> Ecto.Changeset.put_assoc(:genres, genres)
+      |> Repo.update()
+    end
   end
 
   def delete_movie(%Movie{} = movie) do
