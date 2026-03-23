@@ -48,7 +48,7 @@ defmodule MovixAppWeb.Api.MoviesController do
   def update(conn, %{"id" => id} = params) do
     movie = Movies.get_movie!(id)
 
-    with {:ok, %{url: url, public_id: public_id}} <- upload_to_cloudinary(params["poster"]),
+    with {:ok, %{url: url, public_id: public_id}} <- handle_poster_update(movie, params),
          attrs <-
            params
            |> Map.put("poster", url)
