@@ -48,8 +48,12 @@ defmodule MovixAppWeb.Api.MoviesController do
   def update(conn, %{"id" => id} = params) do
     movie = Movies.get_movie!(id)
 
-    with {:ok, attrs} <- handle_poster_update(movie, params),
-         {:ok, movie} <- Movies.update_movie(movie, attrs) do
+    with {:ok, %{url: url, public_id: public_id}} <- upload_to_cloudinary(params["poster"]),
+         attrs <-
+           params
+           |> Map.put("poster", url)
+           |> Map.put("poster_public_id", public_id),
+         {:ok, movie} <- Movies.create_movie(attrs) do
       movie = Movies.get_movie!(movie.id)
 
       conn
@@ -79,8 +83,11 @@ defmodule MovixAppWeb.Api.MoviesController do
 
   defp upload_to_cloudinary(%Plug.Upload{path: path}) do
     case Cloudex.upload(path, %{folder: "movies"}) do
-      {:ok, result} -> %{url: result.secure_url, public_id: result.public_id}
-      {:error, err} -> {:error, err}
+      {:ok, result} ->
+        {:ok, %{url: result.secure_url, public_id: result.public_id}}
+
+      {:error, err} ->
+        {:error, err}
     end
   end
 
