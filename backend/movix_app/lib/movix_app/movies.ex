@@ -81,6 +81,7 @@ defmodule MovixApp.Movies do
   def update_movie(movie, attrs) do
     movie
     |> Movie.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:genres, genres)
     |> Repo.update()
   end
 
