@@ -50,7 +50,7 @@ defmodule MovixApp.Movies do
   # defp parse_bool(val) when val in [true, "true", "1", 1, "on"], do: true
   # defp parse_bool(_), do: false
 
-  def create_movie(attrs) do
+  defp preprocess_genres_and_director(attrs) do
     genres_names =
       case Map.get(attrs, "genres") do
         nil -> []
@@ -60,17 +60,20 @@ defmodule MovixApp.Movies do
 
     director_name = Map.get(attrs, "director")
 
-    # attrs =
-    #   attrs
-    #   |> normalize_attrs()
+    with {:ok, director} <- get_director_by_full_name(director_name) do
+      genres = get_genres_by_names(genres_names)
 
-    with {:ok, director} <- get_director_by_full_name(director_name),
-         genres <- get_genres_by_names(genres_names) do
       attrs =
         attrs
         |> Map.put("director_id", director.id)
         |> Map.drop(["director", "genres"])
 
+      {:ok, attrs, genres}
+    end
+  end
+
+  def create_movie(attrs) do
+    with {:ok, attrs, genres} <- preprocess_genres_and_director(attrs) do
       %Movie{}
       |> Movie.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:genres, genres)
@@ -79,22 +82,7 @@ defmodule MovixApp.Movies do
   end
 
   def update_movie(movie, attrs) do
-    genres_names =
-      case Map.get(attrs, "genres") do
-        nil -> []
-        list when is_list(list) -> list
-        single -> [single]
-      end
-
-    director_name = Map.get(attrs, "director")
-
-    with {:ok, director} <- get_director_by_full_name(director_name),
-         genres <- get_genres_by_names(genres_names) do
-      attrs =
-        attrs
-        |> Map.put("director_id", director.id)
-        |> Map.drop(["director", "genres"])
-
+    with {:ok, attrs, genres} <- preprocess_genres_and_director(attrs) do
       if Map.has_key?(attrs, "poster") && movie.public_id_cloudinary do
         MoviesController.delete_from_cloudinary(movie.public_id_cloudinary)
       end
