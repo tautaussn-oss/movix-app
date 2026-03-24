@@ -1,21 +1,21 @@
-import { SelectBarProp, SelectType } from '@/types/movies';
+import { Genre, SelectBarProp } from '@/types/movies';
 export function SelectBar({
-  type,
-  options,
+ genres,
   onSelect,
-}: { type: SelectType } & { options: string[] } & SelectBarProp) {
+}:{genres:Genre[]|null}& SelectBarProp) {
+  if(genres===null) return <p>Popravi kasnije ovo!</p>
   return (
     <select
       onChange={(e) => onSelect(e.target.value)}
-      className="w-1/3 rounded-full bg-gray-200 shadow-lg px-3 py-1 text-gray-500"
+      className="mx-5 w-1/2 md:w-1/3 rounded-full bg-gray-200 shadow-lg px-3 py-1 text-gray-500 cursor-pointer"
     >
-      <option value={''}>
-        {type === 'sort' ? 'Sort by' : type === 'year' ? 'Filter by year' : 'Filter by genre'}
+      <option value={''} >
+        Filter By Genre
       </option>
-      {options.map((option) => {
+      {genres.map((genre) => {
         return (
-          <option key={option} value={option}>
-            {option}
+          <option key={genre.id} value={genre.id}>
+            {genre.genre}
           </option>
         );
       })}

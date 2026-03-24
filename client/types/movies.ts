@@ -3,7 +3,7 @@ export interface Movie {
   title: string;
   year: number;
   genres: string[];
-  rating: number;
+  rating: number | null;
   director: string;
   duration: number;
   poster: string;
@@ -18,3 +18,17 @@ export type SelectBarProp = {
   onSelect: (value: string) => void;
 };
 export type SelectType = 'sort' | 'genre' | 'year';
+
+export type SwitchProp = {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+};
+export interface Genre {
+  id: number;
+  genre: string;
+}
+export type DataMap = {
+  movies: Movie[];
+  genres: Genre[];
+};
+

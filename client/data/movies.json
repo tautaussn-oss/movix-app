@@ -7,7 +7,7 @@
     "rating": 8.2,
     "director": "Ava Carter",
     "duration": 128,
-    "poster": "https://picsum.photos/150/150?random=1",
+    "poster": "https://picsum.photos/276/390?random=1",
     "description": "A team of engineers intercepts a signal from deep space.",
     "featured": true
   },
@@ -19,7 +19,7 @@
     "rating": 7.5,
     "director": "Daniel Reeves",
     "duration": 110,
-    "poster": "https://picsum.photos/150/150?random=2",
+    "poster": "https://picsum.photos/276/390?random=2",
     "description": "A detective investigates a mysterious disappearance in a coastal town.",
     "featured": false
   },
@@ -31,7 +31,7 @@
     "rating": 8.0,
     "director": "Lena Moritz",
     "duration": 115,
-    "poster": "https://picsum.photos/150/150?random=3",
+    "poster": "https://picsum.photos/276/390?random=3",
     "description": "Two siblings reunite in their hometown and confront old family secrets.",
     "featured": false
   },
@@ -43,7 +43,7 @@
     "rating": 8.4,
     "director": "Marcus Chen",
     "duration": 134,
-    "poster": "https://picsum.photos/150/150?random=4",
+    "poster": "https://picsum.photos/276/390?random=4",
     "description": "In a futuristic city, a hacker discovers a conspiracy that could change humanity.",
     "featured": true
   },
@@ -55,7 +55,7 @@
     "rating": 7.3,
     "director": "Oliver Grant",
     "duration": 102,
-    "poster": "https://picsum.photos/150/150?random=5",
+    "poster": "https://picsum.photos/276/390?random=5",
     "description": "A journalist follows a trail of clues leading to a hidden truth.",
     "featured": false
   },
@@ -67,7 +67,7 @@
     "rating": 7.9,
     "director": "Sofia Alvarez",
     "duration": 121,
-    "poster": "https://picsum.photos/150/150?random=6",
+    "poster": "https://picsum.photos/276/390?random=6",
     "description": "A group of explorers travel across continents in search of a lost treasure.",
     "featured": true
   },
@@ -79,7 +79,7 @@
     "rating": 7.6,
     "director": "Henry Collins",
     "duration": 108,
-    "poster": "https://picsum.photos/150/150?random=7",
+    "poster": "https://picsum.photos/276/390?random=7",
     "description": "A former soldier struggles to rebuild his life after returning home.",
     "featured": false
   },
@@ -91,7 +91,7 @@
     "rating": 7.8,
     "director": "Natalie Brooks",
     "duration": 117,
-    "poster": "https://picsum.photos/150/150?random=8",
+    "poster": "https://picsum.photos/276/390?random=8",
     "description": "A young cop navigates corruption and loyalty in a bustling metropolis.",
     "featured": false
   },
@@ -103,7 +103,7 @@
     "rating": 7.2,
     "director": "Lucas Bennett",
     "duration": 105,
-    "poster": "https://picsum.photos/150/150?random=9",
+    "poster": "https://picsum.photos/276/390?random=9",
     "description": "A journey through remote landscapes leads to unexpected friendships.",
     "featured": false
   },
@@ -115,7 +115,7 @@
     "rating": 7.7,
     "director": "Clara Nguyen",
     "duration": 112,
-    "poster": "https://picsum.photos/150/150?random=10",
+    "poster": "https://picsum.photos/276/390?random=10",
     "description": "Two strangers meet under unusual circumstances and change each other's lives.",
     "featured": true
   },
@@ -127,7 +127,7 @@
     "rating": 7.4,
     "director": "Victor Hayes",
     "duration": 119,
-    "poster": "https://picsum.photos/150/150?random=11",
+    "poster": "https://picsum.photos/276/390?random=11",
     "description": "A fearless pilot fights to protect a colony on the edge of space.",
     "featured": false
   },
@@ -139,7 +139,7 @@
     "rating": 8.1,
     "director": "Isabella Rossi",
     "duration": 126,
-    "poster": "https://picsum.photos/150/150?random=12",
+    "poster": "https://picsum.photos/276/390?random=12",
     "description": "A young woman discovers magical powers tied to the ocean's mysteries.",
     "featured": true
   }
