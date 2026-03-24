@@ -15,11 +15,11 @@ export async function getMovieByID(id: string): Promise<Movie | null> {
   const movie: Movie = await response.json();
   return movie;
 }
-export async function getMoviesByGenreId(id:string):Promise<Movie[] | null>{
-  const response=await fetch(`https://movix-app-az3n.onrender.com/api/genres/${id}`);
-  if(response.status===404) return null;
-  if(!response.ok) throw new Error('Failed to fetch movies for this genre!');
-  const data=await response.json();
-  const movies=data.movies;
+export async function getMoviesByGenreId(id: string): Promise<Movie[] | null> {
+  const response = await fetch(`https://movix-app-az3n.onrender.com/api/genres/${id}`);
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error('Failed to fetch movies for this genre!');
+  const data = await response.json();
+  const movies = data.movies;
   return movies;
 }

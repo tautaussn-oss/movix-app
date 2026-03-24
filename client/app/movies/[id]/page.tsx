@@ -6,13 +6,13 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
   const { id } = await params;
 
   const movie = await getMovieByID(id);
-  if (movie === null) return <StatusMessage message='This movie does not exist!'/>;
+  if (movie === null) return <StatusMessage message="This movie does not exist!" />;
 
   const movies = await getData('movies');
 
   let prevMovie = null;
   let nextMovie = null;
-  let relatedMovies=null;
+  let relatedMovies = null;
 
   if (movies !== null) {
     const currentIndex = movies.findIndex((m) => m.id === movie.id);
@@ -25,13 +25,19 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
       nextMovie = movies[currentIndex + 1];
     }
   }
-  if(movie!=null && movies!==null){
-    relatedMovies=movies.filter(m=>m.id!==movie.id && m.genres.some((genre)=>movie.genres.includes(genre)));
-
+  if (movie != null && movies !== null) {
+    relatedMovies = movies.filter(
+      (m) => m.id !== movie.id && m.genres.some((genre) => movie.genres.includes(genre)),
+    );
   }
   return (
     <div className="flex justify-center w-full">
-      <MovieDetail movie={movie} prevMovie={prevMovie} nextMovie={nextMovie} relatedMovies={relatedMovies}/>
+      <MovieDetail
+        movie={movie}
+        prevMovie={prevMovie}
+        nextMovie={nextMovie}
+        relatedMovies={relatedMovies}
+      />
     </div>
   );
 }

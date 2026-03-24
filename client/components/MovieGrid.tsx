@@ -2,7 +2,6 @@ import { MovieCard } from './MovieCard';
 import { Movie } from '@/types/movies';
 
 export function MovieGrid({ moviesList }: { moviesList: Movie[] }) {
-  
   // const filteredMovies =
   //   searchQuery === ''
   //     ? moviesList

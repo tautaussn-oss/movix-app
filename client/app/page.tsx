@@ -5,7 +5,7 @@ import { getData } from '@/lib/movies';
 
 export default async function Home() {
   const movies = await getData('movies');
-  if (movies === null) return <StatusMessage message='Movies not found!'/>;
+  if (movies === null) return <StatusMessage message="Movies not found!" />;
   const featured = movies.filter((movie) => movie.featured);
   return (
     <div className="">
@@ -13,7 +13,7 @@ export default async function Home() {
         <h1 className="text-white font-bold ">Featured Movies:</h1>
         <MovieGrid moviesList={featured} />
         <h1 className="text-white font-bold ">Favorites:</h1>
-        <Favorites movies={movies}/>
+        <Favorites movies={movies} />
       </main>
     </div>
   );

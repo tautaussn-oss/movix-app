@@ -31,4 +31,3 @@ export type DataMap = {
   movies: Movie[];
   genres: Genre[];
 };
-
