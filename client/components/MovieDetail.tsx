@@ -65,6 +65,26 @@ export function MovieDetail({
       setIsFavorite(false);
     }
   }
+  const handleRating=async(rating:number)=>{
+    setRating(rating);
+    try{
+      const response= await fetch(`https://movix-app-az3n.onrender.com/api/ratings/${movie.id}`,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body:JSON.stringify({rating})
+      })
+      if(!response.ok) throw new Error('Failed to save Rating!');
+      const text = await response.text();
+    console.log('status:', response.status);
+    console.log('response:', text);
+    router.refresh();
+      
+    }catch(error){
+      console.error(error);
+    }
+  }
   
   return (
     <div className="flex flex-col gap-5 w-full items-center p-3">
@@ -125,10 +145,10 @@ export function MovieDetail({
       </div>
       <div className='flex gap-2 text-white font-semibold'> Rate this Movie:
         {rateButtons.map(button=>{
-        return <button key={button} onClick={()=>setRating(button)}><TbStarFilled className={`text-2xl ${button<=rating?'text-yellow-400':'text-gray-400' }`} /></button>
+        return <button key={button} onClick={()=>handleRating(button)}><TbStarFilled className={`text-2xl ${button<=rating?'text-yellow-400':'text-gray-400' }`} /></button>
       })}
         <span className=""> Rating:</span>
-            {movie.rating !== null ? movie.rating : 'N/A'} / 5
+            {movie.rating !== null ? movie.rating.toFixed(1) : 'N/A'} / 5
       </div>
       <button className='flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full text-white border border-white' onClick={handleFavorites}>{isFavorite?'Remove from Favorites':'Add to Favorites'} <GoHeartFill className={`${isFavorite && 'text-red-500'}`}/></button>
       <button className='flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full bg-white text-black '>Edit this Movie<FaEdit/></button>

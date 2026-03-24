@@ -12,7 +12,7 @@ export function Switch({ checked, onChange }: SwitchProp) {
             onChange={() => onChange(!checked)}
           />
           <div className="absolute inset-0 w-full h-full rounded-full transition peer-checked:bg-blue-500" />
-          <div className="absolute top-[2.5px] left-[2.5px] bg-gray-900 w-5 h-5 rounded-full transition peer-checked:translate-x-[25px]" />
+          <div className="absolute top-[2.5px] left-[2.5px] bg-gray-900 w-5 h-5 rounded-full transition peer-checked:translate-x-6.25" />
         </div>
         <span className="left">Only Show Featured Movies</span>
       </label>
