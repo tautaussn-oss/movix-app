@@ -4,7 +4,7 @@ defmodule MovixApp.Ratings.Rating do
   alias MovixApp.Movies.Movie
 
   schema "ratings" do
-    field(:rating, :float)
+    field(:rating, :integer)
 
     belongs_to(:movie, Movie)
 
@@ -13,13 +13,9 @@ defmodule MovixApp.Ratings.Rating do
 
   def changeset(rating, attrs) do
     rating
-    |> cast(attrs, [
-      [:rating, :movie_id]
-    ])
-    |> validate_required([
-      [:rating, :movie_id]
-    ])
-    |> validate_number(:rating, greater_than: 0, less_than_or_equal_to: 10)
+    |> cast(attrs, [:rating, :movie_id])
+    |> validate_required([:rating, :movie_id])
+    |> validate_number(:rating, greater_than: 0, less_than_or_equal_to: 5)
     |> assoc_constraint(:movie)
   end
 end

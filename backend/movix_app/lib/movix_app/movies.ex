@@ -1,8 +1,8 @@
 defmodule MovixApp.Movies do
   alias MovixApp.Repo
   alias MovixApp.Movies.Movie
-  alias MovixApp.Genres.Genre
-  alias MovixApp.Directors.Director
+  # alias MovixApp.Genres.Genre
+  # alias MovixApp.Directors.Director
   # alias MovixAppWeb.Api.MoviesController
   alias MovixAppWeb.Api.CloudinaryHelper
   alias MovixApp.MoviesHelper
@@ -19,63 +19,63 @@ defmodule MovixApp.Movies do
     |> Repo.preload([:genres, :director, :ratings])
   end
 
-  def get_director_by_full_name(full_name) do
-    [name, surname] = String.split(full_name, " ")
+  # def get_director_by_full_name(full_name) do
+  #   [name, surname] = String.split(full_name, " ")
 
-    case Repo.get_by(Director, name: name, surname: surname) do
-      nil -> {:error, :director_not_found}
-      director -> {:ok, director}
-    end
-  end
-
-  def get_genres_by_names(names) do
-    Repo.all(from(g in Genre, where: g.genre in ^names))
-  end
-
-  # defp normalize_attrs(attrs) do
-  #   attrs
-  #   |> Map.update("year", nil, &parse_int/1)
-  #   |> Map.update("duration", nil, &parse_int/1)
-  #   |> Map.update("featured", false, &parse_bool/1)
-  # end
-
-  # defp parse_int(nil), do: nil
-  # defp parse_int(val) when is_integer(val), do: val
-
-  # defp parse_int(val) when is_binary(val) do
-  #   case Integer.parse(val) do
-  #     {int, _} -> int
-  #     :error -> nil
+  #   case Repo.get_by(Director, name: name, surname: surname) do
+  #     nil -> {:error, :director_not_found}
+  #     director -> {:ok, director}
   #   end
   # end
 
-  # defp parse_bool(val) when val in [true, "true", "1", 1, "on"], do: true
-  # defp parse_bool(_), do: false
+  # def get_genres_by_names(names) do
+  #   Repo.all(from(g in Genre, where: g.genre in ^names))
+  # end
 
-  defp preprocess_genres_and_director(attrs) do
-    genres_names =
-      case Map.get(attrs, "genres") do
-        nil -> []
-        list when is_list(list) -> list
-        single -> [single]
-      end
+  # # defp normalize_attrs(attrs) do
+  # #   attrs
+  # #   |> Map.update("year", nil, &parse_int/1)
+  # #   |> Map.update("duration", nil, &parse_int/1)
+  # #   |> Map.update("featured", false, &parse_bool/1)
+  # # end
 
-    director_name = Map.get(attrs, "director")
+  # # defp parse_int(nil), do: nil
+  # # defp parse_int(val) when is_integer(val), do: val
 
-    with {:ok, director} <- get_director_by_full_name(director_name) do
-      genres = get_genres_by_names(genres_names)
+  # # defp parse_int(val) when is_binary(val) do
+  # #   case Integer.parse(val) do
+  # #     {int, _} -> int
+  # #     :error -> nil
+  # #   end
+  # # end
 
-      attrs =
-        attrs
-        |> Map.put("director_id", director.id)
-        |> Map.drop(["director", "genres"])
+  # # defp parse_bool(val) when val in [true, "true", "1", 1, "on"], do: true
+  # # defp parse_bool(_), do: false
 
-      {:ok, attrs, genres}
-    end
-  end
+  # defp preprocess_genres_and_director(attrs) do
+  #   genres_names =
+  #     case Map.get(attrs, "genres") do
+  #       nil -> []
+  #       list when is_list(list) -> list
+  #       single -> [single]
+  #     end
+
+  #   director_name = Map.get(attrs, "director")
+
+  #   with {:ok, director} <- get_director_by_full_name(director_name) do
+  #     genres = get_genres_by_names(genres_names)
+
+  #     attrs =
+  #       attrs
+  #       |> Map.put("director_id", director.id)
+  #       |> Map.drop(["director", "genres"])
+
+  #     {:ok, attrs, genres}
+  #   end
+  # end
 
   def create_movie(attrs) do
-    with {:ok, attrs, genres} <- preprocess_genres_and_director(attrs) do
+    with {:ok, attrs, genres} <- MoviesHelper.preprocess_genres_and_director(attrs) do
       %Movie{}
       |> Movie.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:genres, genres)
@@ -84,7 +84,7 @@ defmodule MovixApp.Movies do
   end
 
   def update_movie(movie, attrs) do
-    with {:ok, attrs, genres} <- preprocess_genres_and_director(attrs) do
+    with {:ok, attrs, genres} <- MoviesHelper.preprocess_genres_and_director(attrs) do
       movie
       |> Movie.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:genres, genres)

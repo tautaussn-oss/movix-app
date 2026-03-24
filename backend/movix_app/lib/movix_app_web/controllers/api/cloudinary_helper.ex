@@ -1,8 +1,8 @@
 defmodule MovixAppWeb.Api.CloudinaryHelper do
-  defp maybe_put(map, _key, nil), do: map
-  defp maybe_put(map, key, value), do: Map.put(map, key, value)
+  def maybe_put(map, _key, nil), do: map
+  def maybe_put(map, key, value), do: Map.put(map, key, value)
 
-  defp upload_to_cloudinary(%Plug.Upload{path: path}) do
+  def upload_to_cloudinary(%Plug.Upload{path: path}) do
     case Cloudex.upload(path, %{folder: "movies"}) do
       {:ok, result} ->
         {:ok, %{url: result.secure_url, public_id: result.public_id}}
@@ -12,16 +12,16 @@ defmodule MovixAppWeb.Api.CloudinaryHelper do
     end
   end
 
-  defp upload_to_cloudinary(_), do: {:error, :no_file}
+  def upload_to_cloudinary(_), do: {:error, :no_file}
 
-  defp handle_poster_update(movie, %{"poster" => %Plug.Upload{} = file}) do
+  def handle_poster_update(movie, %{"poster" => %Plug.Upload{} = file}) do
     with {:ok, %{url: url, public_id: public_id}} <- upload_to_cloudinary(file),
          :ok <- delete_from_cloudinary(movie.public_id_cloudinary) do
       {:ok, %{url: url, public_id: public_id}}
     end
   end
 
-  defp handle_poster_update(_movie, _params) do
+  def handle_poster_update(_movie, _params) do
     {:ok, %{url: nil, public_id: nil}}
   end
 

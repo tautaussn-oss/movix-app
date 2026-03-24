@@ -3,6 +3,7 @@ defmodule MovixAppWeb.Api.MoviesController do
 
   alias MovixApp.Movies
   # alias MovixApp.Movies.Movie
+  alias MovixAppWeb.Api.CloudinaryHelper
 
   def index(conn, _params) do
     movies = Movies.list_all()
@@ -16,7 +17,7 @@ defmodule MovixAppWeb.Api.MoviesController do
 
   def create(conn, params) do
     with {:ok, %{url: poster_url, public_id: public_id}} <-
-           upload_to_cloudinary(params["poster"]),
+           CloudinaryHelper.upload_to_cloudinary(params["poster"]),
          attrs <-
            params
            |> Map.put("poster", poster_url)
@@ -48,11 +49,12 @@ defmodule MovixAppWeb.Api.MoviesController do
   def update(conn, %{"id" => id} = params) do
     movie = Movies.get_movie!(id)
 
-    with {:ok, %{url: url, public_id: public_id}} <- handle_poster_update(movie, params),
+    with {:ok, %{url: url, public_id: public_id}} <-
+           CloudinaryHelper.handle_poster_update(movie, params),
          attrs <-
            params
-           |> maybe_put("poster", url)
-           |> maybe_put("public_id_cloudinary", public_id),
+           |> CloudinaryHelper.maybe_put("poster", url)
+           |> CloudinaryHelper.maybe_put("public_id_cloudinary", public_id),
          {:ok, movie} <- Movies.update_movie(movie, attrs) do
       movie = Movies.get_movie!(movie.id)
 
