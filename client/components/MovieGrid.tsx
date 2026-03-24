@@ -1,8 +1,8 @@
 import { MovieCard } from './MovieCard';
 import { Movie } from '@/types/movies';
 
-export function MovieGrid({ moviesList }: { moviesList: Movie[] | null }) {
-  if (moviesList === null) return <p>Movies not found!</p>;
+export function MovieGrid({ moviesList }: { moviesList: Movie[] }) {
+  
   // const filteredMovies =
   //   searchQuery === ''
   //     ? moviesList

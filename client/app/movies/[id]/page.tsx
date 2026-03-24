@@ -1,11 +1,12 @@
 import { MovieDetail } from '@/components/MovieDetail';
+import { StatusMessage } from '@/components/StatusMessage';
 import { getData, getMovieByID } from '@/lib/movies';
 
 export default async function MovieDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const movie = await getMovieByID(id);
-  if (movie === null) return <p>Movie not found!</p>;
+  if (movie === null) return <StatusMessage message='This movie does not exist!'/>;
 
   const movies = await getData('movies');
 

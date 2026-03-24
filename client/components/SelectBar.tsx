@@ -1,9 +1,10 @@
 import { Genre, SelectBarProp } from '@/types/movies';
+import { StatusMessage } from './StatusMessage';
 export function SelectBar({
  genres,
   onSelect,
 }:{genres:Genre[]|null}& SelectBarProp) {
-  if(genres===null) return <p>Popravi kasnije ovo!</p>
+  if(genres===null) return <StatusMessage message='No genres found!'/>
   return (
     <select
       onChange={(e) => onSelect(e.target.value)}

@@ -7,10 +7,11 @@ import { SearchBar } from '@/components/SearchBar';
 import { SelectBar } from '@/components/SelectBar';
 import { Switch } from '@/components/Switch';
 import { MovieGrid } from './MovieGrid';
+import { StatusMessage } from './StatusMessage';
 
 
-export function MoviesClientSection({ moviesList, genresList }: { moviesList: Movie[] | null } & {genresList: Genre[] | null}) {
-  const [movies, setMovies]=useState(moviesList);
+export function MoviesClientSection({ moviesList, genresList }: { moviesList: Movie[] } & {genresList: Genre[] | null}) {
+  const [movies, setMovies]=useState<Movie[]| null>(moviesList);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedGenreId, setSelectedGenreId] = useState<string>('');
   const [featured, setFeatured] = useState<boolean>(false);
@@ -37,7 +38,7 @@ export function MoviesClientSection({ moviesList, genresList }: { moviesList: Mo
   };
   const searchResults=searchQuery!=='' && movies!==null?movies.filter(movie=>movie.title.toLowerCase().trim().includes(searchQuery.toLowerCase().trim())):movies;
   const featuredMovies=featured && searchResults!==null?searchResults.filter(movie=>movie.featured):searchResults;
-  if (movies === null) return <p>error fix later</p>;
+  if (movies === null) return <StatusMessage message='No movies found with this filter'/>;
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -49,8 +50,7 @@ export function MoviesClientSection({ moviesList, genresList }: { moviesList: Mo
           Add Movie <span className="font-bold text-lg">+</span>
         </button>
         <Switch checked={featured} onChange={handleFeatured} />
-      </div>
-      <MovieGrid moviesList={featuredMovies} />
+      </div>{featuredMovies!==null && featuredMovies.length!==0?<MovieGrid moviesList={featuredMovies} />:<StatusMessage message='No featured movies!'/>}
     </div>
   );
 }

@@ -3,8 +3,9 @@
 import { Movie } from "@/types/movies";
 import { useEffect, useState } from "react"
 import { MovieGrid } from "./MovieGrid";
+import { StatusMessage } from "./StatusMessage";
 
-export function Favorites({movies}:{movies:Movie[]|null}){
+export function Favorites({movies}:{movies:Movie[]}){
     const [favorites, setFavorites]=useState<number[]>([]);
     useEffect(()=>{
         const stored=localStorage.getItem('favorites');
@@ -13,8 +14,9 @@ export function Favorites({movies}:{movies:Movie[]|null}){
         setFavorites(arr);
     },[]);
     
-    if(movies===null) return <p>No movies!</p>
+    
     const favoriteMovies=movies.filter(m=>favorites.includes(m.id))
+    if(favoriteMovies.length===0) return <StatusMessage message="No favorite Movies!"/>
     return (
         <MovieGrid moviesList={favoriteMovies}/>
     )

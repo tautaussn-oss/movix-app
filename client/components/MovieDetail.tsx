@@ -10,6 +10,7 @@ import { FaEdit } from "react-icons/fa";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { MdArrowForwardIos } from "react-icons/md";
 import { MovieGrid } from './MovieGrid';
+import { StatusMessage } from './StatusMessage';
 
 const rateButtons=[1,2,3,4,5] as const;
 
@@ -133,9 +134,9 @@ export function MovieDetail({
       <button className='flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full bg-white text-black '>Edit this Movie<FaEdit/></button>
       <div className='w-full flex flex-col'>
         <h1 className='w-full border-b border-gray-300 text-white font-semibold text-2xl p-5'>Related Movies</h1>
-        {relatedMovies!==null && <div>
+        {relatedMovies!==null && relatedMovies.length!==0? <div>
           <MovieGrid moviesList={relatedMovies}/>
-        </div>}
+        </div>:<StatusMessage message='No Related Movies!'/>}
       </div>
     </div>
   );

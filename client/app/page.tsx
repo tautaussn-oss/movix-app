@@ -1,10 +1,11 @@
 import { Favorites } from '@/components/Favorites';
 import { MovieGrid } from '@/components/MovieGrid';
+import { StatusMessage } from '@/components/StatusMessage';
 import { getData } from '@/lib/movies';
 
 export default async function Home() {
   const movies = await getData('movies');
-  if (movies === null) return <p>Movies not found!</p>;
+  if (movies === null) return <StatusMessage message='Movies not found!'/>;
   const featured = movies.filter((movie) => movie.featured);
   return (
     <div className="">
