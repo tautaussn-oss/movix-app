@@ -3,7 +3,9 @@ defmodule MovixApp.Movies do
   alias MovixApp.Movies.Movie
   alias MovixApp.Genres.Genre
   alias MovixApp.Directors.Director
-  alias MovixAppWeb.Api.MoviesController
+  # alias MovixAppWeb.Api.MoviesController
+  alias MovixAppWeb.Api.CloudinaryHelper
+  alias MovixApp.MoviesHelper
 
   import Ecto.Query
 
@@ -83,20 +85,18 @@ defmodule MovixApp.Movies do
 
   def update_movie(movie, attrs) do
     with {:ok, attrs, genres} <- preprocess_genres_and_director(attrs) do
-      if Map.has_key?(attrs, "poster") && movie.public_id_cloudinary do
-        MoviesController.delete_from_cloudinary(movie.public_id_cloudinary)
-      end
-
       movie
       |> Movie.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:genres, genres)
       |> Repo.update()
+    else
+      {:error, reason} -> {:error, reason}
     end
   end
 
   def delete_movie(%Movie{} = movie) do
     Repo.transaction(fn ->
-      case MoviesController.delete_from_cloudinary(movie.public_id_cloudinary) do
+      case CloudinaryHelper.delete_from_cloudinary(movie.public_id_cloudinary) do
         :ok -> :ok
         {:error, err} -> Repo.rollback(err)
       end
