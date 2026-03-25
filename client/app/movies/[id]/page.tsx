@@ -1,18 +1,19 @@
 import { MovieDetail } from '@/components/MovieDetail';
 import { StatusMessage } from '@/components/StatusMessage';
 import { getData, getMovieByID } from '@/lib/movies';
+import { Movie } from '@/types/movies';
 
 export default async function MovieDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const movie = await getMovieByID(id);
-  if (movie === null) return <StatusMessage message="This movie does not exist!" />;
+  if (movie === null) return <StatusMessage type='empty' message="This movie does not exist!" />;
 
   const movies = await getData('movies');
 
   let prevMovie = null;
   let nextMovie = null;
-  let relatedMovies = null;
+  let relatedMovies:Movie[] = [];
 
   if (movies !== null) {
     const currentIndex = movies.findIndex((m) => m.id === movie.id);
@@ -25,7 +26,7 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
       nextMovie = movies[currentIndex + 1];
     }
   }
-  if (movie != null && movies !== null) {
+  if (movies !== null) {
     relatedMovies = movies.filter(
       (m) => m.id !== movie.id && m.genres.some((genre) => movie.genres.includes(genre)),
     );

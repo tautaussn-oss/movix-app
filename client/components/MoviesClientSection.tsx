@@ -47,7 +47,7 @@ export function MoviesClientSection({
     featured && searchResults !== null
       ? searchResults.filter((movie) => movie.featured)
       : searchResults;
-  if (movies === null) return <StatusMessage message="No movies found with this filter" />;
+  if (movies === null || movies.length===0) return <StatusMessage type='empty' message="No movies found!" />;
 
   return (
     <div className="flex flex-col items-center gap-3">
@@ -63,7 +63,7 @@ export function MoviesClientSection({
       {featuredMovies !== null && featuredMovies.length !== 0 ? (
         <MovieGrid moviesList={featuredMovies} />
       ) : (
-        <StatusMessage message="No featured movies!" />
+        <StatusMessage type='empty' message="No featured movies!" />
       )}
     </div>
   );

@@ -4,17 +4,15 @@ import { Movie } from '@/types/movies';
 import { useEffect, useState } from 'react';
 import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
+import { getFavorites } from '@/lib/localStorage';
 
 export function Favorites({ movies }: { movies: Movie[] }) {
   const [favorites, setFavorites] = useState<number[]>([]);
   useEffect(() => {
-    const stored = localStorage.getItem('favorites');
-    const arr: number[] = stored ? JSON.parse(stored) : [];
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFavorites(arr);
+    setFavorites(getFavorites());
   }, []);
 
   const favoriteMovies = movies.filter((m) => favorites.includes(m.id));
-  if (favoriteMovies.length === 0) return <StatusMessage message="No favorite Movies!" />;
+  if (favoriteMovies.length === 0) return <StatusMessage type='empty' message="No favorite Movies!" />;
   return <MovieGrid moviesList={favoriteMovies} />;
 }

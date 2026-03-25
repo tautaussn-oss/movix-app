@@ -17,7 +17,6 @@ export type SearchBarProp = {
 export type SelectBarProp = {
   onSelect: (value: string) => void;
 };
-export type SelectType = 'sort' | 'genre' | 'year';
 
 export type SwitchProp = {
   checked: boolean;
@@ -31,3 +30,7 @@ export type DataMap = {
   movies: Movie[];
   genres: Genre[];
 };
+export type StatusMessageProp={
+  type:'empty'|'error'
+  message:string
+}

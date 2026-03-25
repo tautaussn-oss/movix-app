@@ -11,6 +11,7 @@ import { MdArrowBackIosNew } from 'react-icons/md';
 import { MdArrowForwardIos } from 'react-icons/md';
 import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
+import { addFavorite, isFavorite, removeFavorite } from '@/lib/localStorage';
 
 const rateButtons = [1, 2, 3, 4, 5] as const;
 
@@ -23,16 +24,14 @@ export function MovieDetail({
   movie: Movie;
   prevMovie: Movie | null;
   nextMovie: Movie | null;
-  relatedMovies: Movie[] | null;
+  relatedMovies: Movie[];
 }) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavoriteMovie, setIsFavoriteMovie] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem('favorites');
-    const arr: number[] = stored ? JSON.parse(stored) : [];
-    setIsFavorite(arr.includes(movie.id));
+    setIsFavoriteMovie(isFavorite(movie.id));
   }, [movie.id]);
 
   const handleDelete = async (id: number) => {
@@ -51,18 +50,13 @@ export function MovieDetail({
     }
   };
   const handleFavorites = () => {
-    const stored = localStorage.getItem('favorites');
-    const arr: number[] = stored ? JSON.parse(stored) : [];
-    let newArr = [];
-    if (!arr.includes(movie.id)) {
-      newArr = [...arr, movie.id];
-      localStorage.setItem('favorites', JSON.stringify(newArr));
-      setIsFavorite(true);
-    } else {
-      newArr = arr.filter((id) => id !== movie.id);
-      localStorage.setItem('favorites', JSON.stringify(newArr));
-      setIsFavorite(false);
+    if(isFavoriteMovie){
+      removeFavorite(movie.id);
     }
+    else{
+      addFavorite(movie.id);
+    }
+    setIsFavoriteMovie(!isFavoriteMovie);
   };
   const handleRating = async (rating: number) => {
     setRating(rating);
@@ -175,8 +169,8 @@ export function MovieDetail({
         className="flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full text-white border border-white"
         onClick={handleFavorites}
       >
-        {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}{' '}
-        <GoHeartFill className={`${isFavorite && 'text-red-500'}`} />
+        {isFavoriteMovie ? 'Remove from Favorites' : 'Add to Favorites'}{' '}
+        <GoHeartFill className={`${isFavoriteMovie && 'text-red-500'}`} />
       </button>
       <button className="flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full bg-white text-black ">
         Edit this Movie
@@ -186,12 +180,12 @@ export function MovieDetail({
         <h1 className="w-full border-b border-gray-300 text-white font-semibold text-2xl p-5">
           Related Movies
         </h1>
-        {relatedMovies !== null && relatedMovies.length !== 0 ? (
+        {relatedMovies.length > 0 ? (
           <div>
             <MovieGrid moviesList={relatedMovies} />
           </div>
         ) : (
-          <StatusMessage message="No Related Movies!" />
+          <StatusMessage type='empty' message="No Related Movies!" />
         )}
       </div>
     </div>

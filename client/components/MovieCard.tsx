@@ -22,7 +22,7 @@ export function MovieCard({ movie }: { movie: Movie }) {
           </div>
           <p className="py-2 flex gap-2 text-base text-zinc-900">
             <span className="font-semibold text-lg text-zinc-900">Rating:</span>
-            {movie.rating ? movie.rating : 'N/A'}*
+            {movie.rating ? movie.rating.toFixed(1) : 'N/A'}
           </p>
         </div>
       </div>
