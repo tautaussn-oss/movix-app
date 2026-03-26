@@ -5,15 +5,23 @@ import { Movie } from '@/types/movies';
 
 export default async function MovieDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  let movie, movies;
+  try {
+    [movie, movies] = await Promise.all([getMovieByID(id), getData('movies')]);
+  } catch (e) {
+    if (e instanceof Error) {
+      return <StatusMessage type="error" message={e.message} />;
+    } else
+      return (
+        <StatusMessage type="error" message="Something went wrong while loading movie details!" />
+      );
+  }
 
-  const movie = await getMovieByID(id);
-  if (movie === null) return <StatusMessage type='empty' message="This movie does not exist!" />;
-
-  const movies = await getData('movies');
+  if (movie === null) return <StatusMessage type="empty" message="This movie does not exist!" />;
 
   let prevMovie = null;
   let nextMovie = null;
-  let relatedMovies:Movie[] = [];
+  let relatedMovies: Movie[] = [];
 
   if (movies !== null) {
     const currentIndex = movies.findIndex((m) => m.id === movie.id);
@@ -25,12 +33,12 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
     if (currentIndex < movies.length - 1) {
       nextMovie = movies[currentIndex + 1];
     }
-  }
-  if (movies !== null) {
+
     relatedMovies = movies.filter(
       (m) => m.id !== movie.id && m.genres.some((genre) => movie.genres.includes(genre)),
     );
   }
+
   return (
     <div className="flex justify-center w-full">
       <MovieDetail

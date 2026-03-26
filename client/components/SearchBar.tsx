@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 export function SearchBar({ onSearch }: SearchBarProp) {
   const [searchText, setSearchText] = useState('');
   return (
-    <div className="w-1/2 rounded-full flex gap-3">
+    <div className="w-full md:max-w-1/2 lg:max-w-1/3 rounded-full flex gap-3">
       <input
         type="text"
         placeholder="Search Movie Title"

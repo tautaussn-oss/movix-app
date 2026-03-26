@@ -50,12 +50,12 @@ export function MoviesClientSection({
   if (movies === null || movies.length===0) return <StatusMessage type='empty' message="No movies found!" />;
 
   return (
-    <div className="flex flex-col items-center gap-3">
+    <div className="flex flex-col items-center gap-3 p-5">
       <SearchBar onSearch={handleSearch} />
       <SelectBar onSelect={handleGenreFilter} genres={genresList} />
 
-      <div className="flex flex-col w-1/2 md:flex-row md:w-full lg:w-2/3 justify-center gap-5">
-        <button className="text-white border border-white rounded-full w-full md:w-1/2">
+      <div className="flex flex-col w-full md:flex-row justify-center gap-5">
+        <button className="text-white border border-white rounded-full w-full md:max-w-1/3 lg:max-w-1/4">
           Add Movie <span className="font-bold text-lg">+</span>
         </button>
         <Switch checked={featured} onChange={handleFeatured} />

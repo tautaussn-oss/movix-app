@@ -8,19 +8,19 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-black border-b border-gray-400 mb-5 text-white">
-      <div className="flex justify-between items-center p-5 md:p-10">
-        <div className="flex gap-5 items-center">
+    <nav className="bg-black border-b border-gray-400 text-white">
+      <div className="flex justify-between items-center p-3 md:p-5">
+        <div className="flex items-center gap-3">
           <Image src="/logo.png" alt="logo" width={70} height={30} className="rounded" />
           <h1 className="text-2xl font-bold hidden md:block">Movie Library</h1>
         </div>
 
         <div className="hidden md:flex gap-3 items-center">
-          <Link href="/" className="font-bold hover:-translate-y-1 transition">
+          <Link href="/" className="font-bold hover:text-gray-400">
             Home
           </Link>
           <div className="h-6 w-0.5 bg-gray-400"></div>
-          <Link href="/movies" className="font-bold hover:-translate-y-1 transition">
+          <Link href="/movies" className="font-bold hover:text-gray-400">
             Movies
           </Link>
         </div>
@@ -33,11 +33,11 @@ export function Navbar() {
       </div>
 
       {isOpen && (
-        <div className="md:hidden flex flex-col text-end w-full px-5 pb-5 gap-3">
-          <Link href="/" className="font-bold" onClick={() => setIsOpen(false)}>
+        <div className="md:hidden flex flex-col items-center w-full gap-3">
+          <Link href="/" className="w-full text-center font-bold border-y border-gray-400 p-3" onClick={() => setIsOpen(false)}>
             Home
           </Link>
-          <Link href="/movies" className="font-bold" onClick={() => setIsOpen(false)}>
+          <Link href="/movies" className="w-full text-center font-bold pb-3" onClick={() => setIsOpen(false)}>
             Movies
           </Link>
         </div>

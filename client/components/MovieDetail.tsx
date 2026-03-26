@@ -29,12 +29,15 @@ export function MovieDetail({
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [isFavoriteMovie, setIsFavoriteMovie] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+  const [ratingError, setRatingError] = useState('');
 
   useEffect(() => {
     setIsFavoriteMovie(isFavorite(movie.id));
   }, [movie.id]);
 
   const handleDelete = async (id: number) => {
+    setDeleteError('');
     try {
       const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}`, {
         method: 'DELETE',
@@ -46,45 +49,46 @@ export function MovieDetail({
 
       router.push('/movies');
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setDeleteError(error.message);
+      } else setDeleteError('Something went wrong while trying to delete this movie!');
     }
   };
   const handleFavorites = () => {
-    if(isFavoriteMovie){
+    if (isFavoriteMovie) {
       removeFavorite(movie.id);
-    }
-    else{
+    } else {
       addFavorite(movie.id);
     }
     setIsFavoriteMovie(!isFavoriteMovie);
   };
   const handleRating = async (rating: number) => {
-    setRating(rating);
+    setRatingError('');
     try {
       const response = await fetch(`https://movix-app-az3n.onrender.com/api/ratings/${movie.id}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ rating }),
       });
       if (!response.ok) throw new Error('Failed to save Rating!');
-      const text = await response.text();
-      console.log('status:', response.status);
-      console.log('response:', text);
+      setRating(rating);
       router.refresh();
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        setRatingError(error.message);
+      } else setRatingError('Something went wrong while trying to rate this movie!');
     }
   };
 
   return (
-    <div className="flex flex-col gap-5 w-full items-center p-3">
-      <div className="w-full flex justify-between">
+    <div className="flex flex-col gap-5 w-full items-center p-5">
+      <div className="w-full flex justify-between gap-3">
         {prevMovie ? (
           <Link
             href={`/movies/${prevMovie.id}`}
-            className="w-1/3 bg-white rounded-full py-2 flex gap-3 items-center justify-center"
+            className=" bg-white whitespace-nowrap w-1/2 md:max-w-1/3 rounded-full py-2 px-3 flex gap-3 items-center justify-center"
           >
             <MdArrowBackIosNew />
             Previous Movie
@@ -92,7 +96,7 @@ export function MovieDetail({
         ) : (
           <button
             disabled
-            className="w-1/3 bg-gray-300 rounded-full py-2 text-gray-500 flex gap-3 items-center justify-center"
+            className="bg-gray-300 whitespace-nowrap w-1/2 md:max-w-1/3 rounded-full py-2 px-3 text-gray-500 flex gap-3 items-center justify-center"
           >
             <MdArrowBackIosNew />
             Previous Movie
@@ -102,7 +106,7 @@ export function MovieDetail({
         {nextMovie ? (
           <Link
             href={`/movies/${nextMovie.id}`}
-            className="w-1/3 bg-white rounded-full py-2 flex gap-3 items-center justify-center"
+            className="whitespace-nowrap bg-white w-1/2 md:max-w-1/3 rounded-full py-2 px-3 flex gap-3 items-center justify-center"
           >
             Next Movie
             <MdArrowForwardIos />
@@ -110,7 +114,7 @@ export function MovieDetail({
         ) : (
           <button
             disabled
-            className="w-1/3 bg-gray-300 rounded-full py-2 text-gray-500 flex gap-3 items-center justify-center"
+            className="whitespace-nowrap bg-gray-300 w-1/2 md:max-w-1/3 rounded-full py-2 px-3 text-gray-500 flex gap-3 items-center justify-center"
           >
             Next Movie
             <MdArrowForwardIos />
@@ -118,22 +122,23 @@ export function MovieDetail({
         )}
       </div>
       <button
-        className="py-2 w-1/4 rounded-full bg-red-500 text-white"
+        className="py-2 px-3 w-full md:max-w-1/3  rounded-full bg-red-500 text-white"
         onClick={() => handleDelete(movie.id)}
       >
         Delete this Movie
       </button>
+      {deleteError && <p className="text-red-500">{deleteError}</p>}
 
-      <div className="w-1/2 h-full flex flex-col md:flex-row text-black rounded-2xl shadow-lg bg-white">
-        <Image
-          src={movie.poster}
-          alt={movie.title}
-          width={400}
-          height={550}
-          priority
-          className="object-cover rounded-l-2xl"
-        />
-        <div className="flex flex-col justify-between">
+      <div className="w-full h-full flex flex-col md:flex-row md:max-w-2/3 text-black rounded-2xl shadow-lg bg-white">
+        <div className="relative w-full md:max-w-1/2 h-96">
+          <Image
+            src={movie.poster}
+            alt={movie.title}
+            fill
+            className="object-cover rounded-t-[20px] md:rounded-t-none md:rounded-l-[20px]"
+          />
+        </div>
+        <div className="flex flex-col justify-between gap-5">
           <h1 className="text-3xl font-bold text-black m-3">{movie.title}</h1>
           <p className="mx-3">
             <span className="font-semibold">Year: </span>
@@ -150,10 +155,10 @@ export function MovieDetail({
           <p className="mx-3 mb-3">{movie.description}</p>
         </div>
       </div>
-      <div className="flex gap-2 text-white font-semibold">
-        {' '}
+      <div className="flex flex-col md:flex-row gap-2 text-white font-semibold">
         Rate this Movie:
-        {rateButtons.map((button) => {
+        <div className='flex gap-1'>
+          {rateButtons.map((button) => {
           return (
             <button key={button} onClick={() => handleRating(button)}>
               <TbStarFilled
@@ -162,17 +167,21 @@ export function MovieDetail({
             </button>
           );
         })}
-        <span className=""> Rating:</span>
-        {movie.rating !== null ? movie.rating.toFixed(1) : 'N/A'} / 5
+        </div>
+        <div className='flex gap-3'>
+          <span className=""> Rating:</span>
+        <span>{movie.rating !== null ? movie.rating.toFixed(1) : 'N/A'} / 5</span>
+        </div>
       </div>
+      {ratingError && <p className="text-red-500">{ratingError}</p>}
       <button
-        className="flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full text-white border border-white"
+        className="flex gap-3 items-center justify-center w-full md:max-w-1/3 py-2 px-3 rounded-full text-white border border-white"
         onClick={handleFavorites}
       >
         {isFavoriteMovie ? 'Remove from Favorites' : 'Add to Favorites'}{' '}
         <GoHeartFill className={`${isFavoriteMovie && 'text-red-500'}`} />
       </button>
-      <button className="flex gap-3 items-center justify-center w-1/4 py-2 px-2 rounded-full bg-white text-black ">
+      <button className="flex gap-3 items-center justify-center w-full md:max-w-1/3 py-2 px-3 rounded-full bg-white text-black ">
         Edit this Movie
         <FaEdit />
       </button>
@@ -185,7 +194,7 @@ export function MovieDetail({
             <MovieGrid moviesList={relatedMovies} />
           </div>
         ) : (
-          <StatusMessage type='empty' message="No Related Movies!" />
+          <StatusMessage type="empty" message="No Related Movies!" />
         )}
       </div>
     </div>
