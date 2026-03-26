@@ -22,9 +22,9 @@ defmodule MovixApp.Movies do
 
   def filter_movies(filter) do
     Movie
+    |> filter_featured(filter["featured"])
     |> filter_by_genres(filter)
     |> filter_search(filter["search"])
-    |> filter_featured(filter["featured"])
     |> sort(filter["sort_by"])
     |> Repo.all()
     |> Repo.preload([:genres, :director, :ratings])
