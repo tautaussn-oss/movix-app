@@ -129,8 +129,8 @@ export function MovieDetail({
       </button>
       {deleteError && <p className="text-red-500">{deleteError}</p>}
 
-      <div className="w-full h-full flex flex-col md:flex-row md:max-w-2/3 text-black rounded-2xl shadow-lg bg-white">
-        <div className="relative w-full md:max-w-1/2 h-96">
+      <div className="w-69 h-full flex flex-col md:flex-row md:w-2/3 text-black rounded-2xl shadow-lg bg-white">
+        <div className="relative w-full md:w-69 h-96">
           <Image
             src={movie.poster}
             alt={movie.title}

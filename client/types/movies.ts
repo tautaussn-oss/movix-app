@@ -15,6 +15,8 @@ export type SearchBarProp = {
 };
 
 export type SelectBarProp = {
+  placeholder:string
+  options:string[]
   onSelect: (value: string) => void;
 };
 
@@ -33,4 +35,10 @@ export type DataMap = {
 export type StatusMessageProp={
   type:'empty'|'error'
   message:string
+}
+export type FilterMoviesParams={
+  search?:string;
+  genres?:string[];
+  featured?:boolean;
+  sortBy?:string;
 }

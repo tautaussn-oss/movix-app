@@ -1,22 +1,22 @@
-import { Genre, SelectBarProp } from '@/types/movies';
-export function SelectBar({ genres, onSelect }: { genres: Genre[] | null } & SelectBarProp) {
+import { SelectBarProp } from '@/types/movies';
+export function SelectBar({ placeholder, options, onSelect }: SelectBarProp ){
+  
   return (
     <select
       onChange={(e) => onSelect(e.target.value)}
-      className="w-full md:max-w-1/2 lg:max-w-1/3 rounded-full bg-gray-200 px-3 py-1 text-gray-500 cursor-pointer"
+      disabled={options.length===0}
+      className="w-full md:w-1/2 lg:w-1/3 rounded-full bg-gray-200 px-3 py-1 text-gray-500 cursor-pointer"
     >
-      <option value={''}>Filter By Genre</option>
-      {genres !== null ? (
-        genres.map((genre) => {
+      <option value={''}>{placeholder}</option>
+      { 
+        options.map((option) => {
           return (
-            <option key={genre.id} value={genre.id}>
-              {genre.genre}
+            <option key={option} value={option}>
+              {option}
             </option>
           );
         })
-      ) : (
-        <option disabled>No genres found!</option>
-      )}
+      }
     </select>
   );
 }
