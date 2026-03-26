@@ -55,6 +55,17 @@ defmodule MovixApp.Movies.Movie do
       :featured,
       :director_id
     ])
+    |> validate_number(:rating_avg, greater_than_or_equal_to: 0, less_than_or_equal_to: 5)
+    |> validate_number(:rating_count, greater_than_or_equal_to: 0)
+    |> validate_number(:rating_all, greater_than_or_equal_to: 0)
+    |> validate_length(:title, max: 255)
+    |> validate_length(:description, min: 5, max: 1000)
+    |> validate_number(:year,
+      greater_than: 1900,
+      less_than_or_equal_to: Date.utc_today().year + 1
+    )
+    |> validate_number(:duration, greater_than: 0, less_than: 400)
+    |> validate_inclusion(:featured, [true, false])
     |> assoc_constraint(:director)
   end
 end
