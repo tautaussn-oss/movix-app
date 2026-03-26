@@ -9,16 +9,16 @@ defmodule MovixAppWeb.Api.RatingsController do
       "rating" => rating_value
     }
 
-    case Ratings.create_rating(attrs) do
-      {:ok, _rating} ->
+    case Ratings.add_rating(attrs) do
+      {1, _} ->
         conn
         |> put_status(:created)
         |> json(%{ok: "proslo"})
 
-      {:error, changeset} ->
+      {0, _} ->
         conn
-        |> put_status(:unprocessable_entity)
-        |> json(%{errors: changeset})
+        |> put_status(:not_found)
+        |> json(%{error: "Movie not found"})
     end
   end
 end

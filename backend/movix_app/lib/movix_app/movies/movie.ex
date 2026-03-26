@@ -12,7 +12,10 @@ defmodule MovixApp.Movies.Movie do
     field(:duration, :integer)
     field(:poster, :string)
     field(:featured, :boolean)
-    field(:public_id_cloudinary)
+    field(:public_id_cloudinary, :string)
+    field(:rating_avg, :float)
+    field(:rating_all, :integer)
+    field(:rating_count, :integer)
 
     many_to_many(:genres, Genre,
       join_through: "movie_genres",
@@ -37,7 +40,10 @@ defmodule MovixApp.Movies.Movie do
       :poster,
       :public_id_cloudinary,
       :featured,
-      :director_id
+      :director_id,
+      :rating_avg,
+      :rating_all,
+      :rating_count
     ])
     |> validate_required([
       :title,

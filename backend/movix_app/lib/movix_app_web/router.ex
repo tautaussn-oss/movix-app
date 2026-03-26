@@ -22,7 +22,7 @@ defmodule MovixAppWeb.Router do
     get("/genres", GenresController, :index)
     get("/genres/:id", GenresController, :show)
     post("/movies", MoviesController, :create)
-    post("/ratings/:id", RatingsController, :create)
+    put("/ratings/:id", RatingsController, :create)
     put("/movies/:id", MoviesController, :update)
     delete("/movies/:id", MoviesController, :delete)
   end

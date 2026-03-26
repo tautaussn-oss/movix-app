@@ -9,8 +9,9 @@ defmodule MovixApp.Movies do
 
   import Ecto.Query
 
-  def list_all do
-    Repo.all(Movie)
+  def list_all() do
+    Movie
+    |> Repo.all()
     |> Repo.preload([:genres, :director, :ratings])
   end
 
@@ -19,60 +20,53 @@ defmodule MovixApp.Movies do
     |> Repo.preload([:genres, :director, :ratings])
   end
 
-  # def get_director_by_full_name(full_name) do
-  #   [name, surname] = String.split(full_name, " ")
+  def filter_movies(filter) do
+    Movie
+    |> filter_by_genres(filter)
+    |> filter_search(filter["search"])
+    |> filter_featured(filter["featured"])
+    |> sort(filter["sort_by"])
+    |> Repo.all()
+    |> Repo.preload([:genres, :director, :ratings])
+  end
 
-  #   case Repo.get_by(Director, name: name, surname: surname) do
-  #     nil -> {:error, :director_not_found}
-  #     director -> {:ok, director}
-  #   end
-  # end
+  defp filter_by_genres(query, %{"genre" => genres}) do
+    from(movie in query,
+      join: g in assoc(movie, :genres),
+      where: g.genre in ^genres,
+      preload: [:genres]
+    )
+  end
 
-  # def get_genres_by_names(names) do
-  #   Repo.all(from(g in Genre, where: g.genre in ^names))
-  # end
+  defp filter_by_genres(query, _), do: query
 
-  # # defp normalize_attrs(attrs) do
-  # #   attrs
-  # #   |> Map.update("year", nil, &parse_int/1)
-  # #   |> Map.update("duration", nil, &parse_int/1)
-  # #   |> Map.update("featured", false, &parse_bool/1)
-  # # end
+  defp filter_search(query, s) when s in ["", nil], do: query
 
-  # # defp parse_int(nil), do: nil
-  # # defp parse_int(val) when is_integer(val), do: val
+  defp filter_search(query, s) do
+    where(query, [movie], ilike(movie.title, ^"%#{s}%"))
+  end
 
-  # # defp parse_int(val) when is_binary(val) do
-  # #   case Integer.parse(val) do
-  # #     {int, _} -> int
-  # #     :error -> nil
-  # #   end
-  # # end
+  defp sort(query, "title") do
+    order_by(query, :title)
+  end
 
-  # # defp parse_bool(val) when val in [true, "true", "1", 1, "on"], do: true
-  # # defp parse_bool(_), do: false
+  defp sort(query, "year") do
+    order_by(query, :year)
+  end
 
-  # defp preprocess_genres_and_director(attrs) do
-  #   genres_names =
-  #     case Map.get(attrs, "genres") do
-  #       nil -> []
-  #       list when is_list(list) -> list
-  #       single -> [single]
-  #     end
+  defp sort(query, "rating") do
+    order_by(query, :rating_avg)
+  end
 
-  #   director_name = Map.get(attrs, "director")
+  defp sort(query, _) do
+    order_by(query, :id)
+  end
 
-  #   with {:ok, director} <- get_director_by_full_name(director_name) do
-  #     genres = get_genres_by_names(genres_names)
+  defp filter_featured(query, "true") do
+    from(movie in query, where: movie.featured == true)
+  end
 
-  #     attrs =
-  #       attrs
-  #       |> Map.put("director_id", director.id)
-  #       |> Map.drop(["director", "genres"])
-
-  #     {:ok, attrs, genres}
-  #   end
-  # end
+  defp filter_featured(query, _), do: query
 
   def create_movie(attrs) do
     with {:ok, attrs, genres} <- MoviesHelper.preprocess_genres_and_director(attrs) do
