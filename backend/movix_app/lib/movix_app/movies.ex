@@ -69,11 +69,16 @@ defmodule MovixApp.Movies do
   defp filter_featured(query, _), do: query
 
   def create_movie(attrs) do
-    with {:ok, attrs, genres} <- MoviesHelper.preprocess_genres_and_director(attrs) do
-      %Movie{}
-      |> Movie.changeset(attrs)
-      |> Ecto.Changeset.put_assoc(:genres, genres)
-      |> Repo.insert()
+    with {:ok, attrs, genres} <- MoviesHelper.preprocess_genres_and_director(attrs),
+         {:ok, movie} <-
+           %Movie{}
+           |> Movie.changeset(attrs)
+           |> Ecto.Changeset.put_assoc(:genres, genres)
+           |> Repo.insert() do
+      {:ok, movie}
+    else
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
