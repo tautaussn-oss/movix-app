@@ -24,8 +24,6 @@ defmodule MovixApp.Ratings do
   import Ecto.Query
 
   def add_rating(%{"movie_id" => movie_id, "rating" => rating_value}) do
-    rating_value = String.to_integer(rating_value)
-
     Movie
     |> where([m], m.id == ^movie_id)
     |> update([m],
