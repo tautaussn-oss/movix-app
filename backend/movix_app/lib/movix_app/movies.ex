@@ -59,7 +59,11 @@ defmodule MovixApp.Movies do
   end
 
   defp sort(query, "rating") do
-    order_by(query, :rating_avg)
+    order_by(query, [m], desc: m.rating_avg)
+  end
+
+  defp sort(query, "popular") do
+    order_by(query, [m], desc: m.rating_count)
   end
 
   defp sort(query, _) do
@@ -116,13 +120,15 @@ defmodule MovixApp.Movies do
         order_by: [asc: m.id],
         limit: 1
       )
-    ) ||
-      Repo.one(
-        from(m in Movie,
-          order_by: [asc: m.id],
-          limit: 1
-        )
-      )
+    )
+
+    # ||
+    #   Repo.one(
+    #     from(m in Movie,
+    #       order_by: [asc: m.id],
+    #       limit: 1
+    #     )
+    #   )
   end
 
   def get_prev_movie(id) do
@@ -133,13 +139,15 @@ defmodule MovixApp.Movies do
         order_by: [desc: m.id],
         limit: 1
       )
-    ) ||
-      Repo.one(
-        from(m in Movie,
-          order_by: [desc: m.id],
-          limit: 1
-        )
-      )
+    )
+
+    #  ||
+    #   Repo.one(
+    #     from(m in Movie,
+    #       order_by: [desc: m.id],
+    #       limit: 1
+    #     )
+    #   )
   end
 end
 

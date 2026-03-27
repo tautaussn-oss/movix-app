@@ -17,6 +17,10 @@ defmodule MovixAppWeb.Api.MoviesJSON do
     data_movie_id(movie)
   end
 
+  def data_movie_id(nil) do
+    nil
+  end
+
   def data_movie_id(movie) do
     %{
       id: movie.id

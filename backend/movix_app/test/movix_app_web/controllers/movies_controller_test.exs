@@ -13,4 +13,7 @@ defmodule MovixAppWeb.MoviesControllerTest do
 
     assert json_response(conn, 200)
   end
+
+  test " create new movie", %{conn: conn} do
+  end
 end
