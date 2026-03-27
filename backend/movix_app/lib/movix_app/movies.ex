@@ -31,9 +31,13 @@ defmodule MovixApp.Movies do
   end
 
   defp filter_by_genres(query, %{"genre" => genres}) do
+    genres = List.wrap(genres)
+
     from(movie in query,
       join: g in assoc(movie, :genres),
       where: g.genre in ^genres,
+      group_by: movie.id,
+      having: count(g.id) == ^length(genres),
       preload: [:genres]
     )
   end
