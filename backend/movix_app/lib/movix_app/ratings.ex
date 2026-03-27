@@ -32,9 +32,8 @@ defmodule MovixApp.Ratings do
         rating_count: fragment("? + 1", m.rating_count),
         rating_avg:
           fragment(
-            "(? * ? + ?) / (? + 1)",
-            m.rating_avg,
-            m.rating_count,
+            "(? + ?)::float / (? + 1)",
+            m.rating_all,
             ^rating_value,
             m.rating_count
           )

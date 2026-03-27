@@ -13,6 +13,16 @@ defmodule MovixAppWeb.Api.MoviesJSON do
     data_movie(movie)
   end
 
+  def show_id(%{movie: movie}) do
+    data_movie_id(movie)
+  end
+
+  def data_movie_id(movie) do
+    %{
+      id: movie.id
+    }
+  end
+
   def data_movie(movie) do
     # rating_values = Enum.map(movie.ratings, fn r -> r.rating end)
 

@@ -103,6 +103,40 @@ defmodule MovixApp.Movies do
       Repo.delete(movie)
     end)
   end
+
+  def get_next_movie(id) do
+    # movie =
+    Repo.one(
+      from(m in Movie,
+        where: m.id > ^id,
+        order_by: [asc: m.id],
+        limit: 1
+      )
+    ) ||
+      Repo.one(
+        from(m in Movie,
+          order_by: [asc: m.id],
+          limit: 1
+        )
+      )
+  end
+
+  def get_prev_movie(id) do
+    # movie =
+    Repo.one(
+      from(m in Movie,
+        where: m.id < ^id,
+        order_by: [desc: m.id],
+        limit: 1
+      )
+    ) ||
+      Repo.one(
+        from(m in Movie,
+          order_by: [desc: m.id],
+          limit: 1
+        )
+      )
+  end
 end
 
 # import Ecto.Query

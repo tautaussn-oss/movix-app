@@ -83,4 +83,14 @@ defmodule MovixAppWeb.Api.MoviesController do
         |> json(%{error: "Delete failed", reason: inspect(err)})
     end
   end
+
+  def next(conn, %{"id" => id}) do
+    movie = Movies.get_next_movie(id)
+    render(conn, :show_id, movie: movie)
+  end
+
+  def prev(conn, %{"id" => id}) do
+    movie = Movies.get_prev_movie(id)
+    render(conn, :show_id, movie: movie)
+  end
 end

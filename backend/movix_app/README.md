@@ -17,7 +17,11 @@ Follow link (cmd + click)
     get("/movies/:id", MoviesController, :show)
     get("/genres", GenresController, :index)
     get("/genres/:id", GenresController, :show)
+    get("/movies/:id/next", MoviesController, :next)
+    get("/movies/:id/prev", MoviesController, :prev)
     post("/movies", MoviesController, :create)
-    post("/ratings/:id", RatingsController, :create)
+    put("/ratings/:id", RatingsController, :create)
     put("/movies/:id", MoviesController, :update)
-    delete("/movies/:id", MoviesController, :delete)```
+    delete("/movies/:id", MoviesController, :delete) 
+    
+    ```
