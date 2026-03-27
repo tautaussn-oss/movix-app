@@ -42,3 +42,7 @@ export type FilterMoviesParams={
   featured?:boolean;
   sortBy?:string;
 }
+export type GenreMultiSelectProp={
+  genres:string[]
+  onSelect:(value:string[])=>void
+}

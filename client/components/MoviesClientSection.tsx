@@ -8,6 +8,7 @@ import { Switch } from '@/components/Switch';
 import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
 import { getFilteredMovies } from '@/lib/movies';
+import { GenreMultiSelect } from './GenreMultiSelect';
 
 const SORTING_OPTIONS = ['title', 'year', 'rating'];
 
@@ -17,7 +18,7 @@ export function MoviesClientSection({
 }: { moviesList: Movie[] } & { genresList: Genre[] | null }) {
   const [movies, setMovies] = useState<Movie[] | null>(moviesList);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedGenre, setSelectedGenre] = useState<string>('');
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
   const [featured, setFeatured] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState('');
   const [error, setError] = useState('');
@@ -28,7 +29,7 @@ export function MoviesClientSection({
       try {
         const filteredMovies = await getFilteredMovies({
           search: searchQuery,
-          genres: selectedGenre ? [selectedGenre] : [],
+          genres: selectedGenres ? selectedGenres : [],
           featured,
           sortBy,
         });
@@ -39,7 +40,7 @@ export function MoviesClientSection({
       }
     }
     fetchFilteredData();
-  }, [searchQuery, selectedGenre, featured, sortBy]);
+  }, [searchQuery, selectedGenres, featured, sortBy]);
 
   const handleSort = (sortingType: string) => {
     setSortBy(sortingType);
@@ -48,21 +49,19 @@ export function MoviesClientSection({
   const handleSearch = (title: string) => {
     setSearchQuery(title);
   };
-  const handleGenreFilter = (genre: string) => {
-    setSelectedGenre(genre);
+  const handleGenreFilter = (genres: string[]) => {
+    setSelectedGenres(genres);
   };
   const handleFeatured = (checked: boolean) => {
     setFeatured(checked);
   };
 
   if (error) return <StatusMessage type="error" message={error} />;
-  if (movies === null || movies.length === 0)
-    return <StatusMessage type="empty" message="No movies found!" />;
-  
+
   return (
     <div className="flex flex-col items-center gap-3 p-5">
       <SearchBar onSearch={handleSearch} />
-      <SelectBar placeholder="Filter by Genre:" options={genres} onSelect={handleGenreFilter} />
+      <GenreMultiSelect genres={genres} onSelect={handleGenreFilter} />
       <SelectBar placeholder="Sort by:" options={SORTING_OPTIONS} onSelect={handleSort} />
 
       <div className="flex flex-col w-full md:flex-row justify-center gap-5">
@@ -71,7 +70,11 @@ export function MoviesClientSection({
         </button>
         <Switch checked={featured} onChange={handleFeatured} />
       </div>
-      <MovieGrid moviesList={movies} />
+      {movies === null || movies.length === 0 ? (
+        <StatusMessage type="empty" message="No movies found!" />
+      ) : (
+        <MovieGrid moviesList={movies} />
+      )}
     </div>
   );
 }
