@@ -15,7 +15,7 @@ defmodule MovixApp.Fixtures do
 
   def movie_fixture(attrs \\ %{}) do
     director = director_fixture()
-    genre = genre_fixture()
+    _genre = genre_fixture()
 
     movie =
       %Movie{

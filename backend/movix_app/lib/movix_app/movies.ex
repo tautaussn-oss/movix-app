@@ -10,9 +10,16 @@ defmodule MovixApp.Movies do
   import Ecto.Query
 
   def list_all() do
-    Movie
-    |> Repo.all()
-    |> Repo.preload([:genres, :director, :ratings])
+    # Movie
+    # |> Repo.all()
+    # |> Repo.preload([:genres, :director, :ratings])
+
+    %{
+      movies:
+        Movie
+        |> Repo.all()
+        |> Repo.preload([:genres, :director, :ratings])
+    }
   end
 
   def list_directors() do
