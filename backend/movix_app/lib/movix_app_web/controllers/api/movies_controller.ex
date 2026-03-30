@@ -17,6 +17,8 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def create(conn, params) do
+    IO.inspect(params, label: "PARAMS")
+
     with {:ok, %{url: poster_url, public_id: public_id}} <-
            CloudinaryHelper.upload_to_cloudinary(params["poster"]),
          attrs <-
@@ -92,5 +94,10 @@ defmodule MovixAppWeb.Api.MoviesController do
   def prev(conn, %{"id" => id}) do
     movie = Movies.get_prev_movie(id)
     render(conn, :show_id, movie: movie)
+  end
+
+  def directors(conn, _params) do
+    directors = Movies.list_directors()
+    render(conn, :show_directors, directors: directors)
   end
 end

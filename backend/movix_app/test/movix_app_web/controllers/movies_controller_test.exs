@@ -1,11 +1,23 @@
 defmodule MovixAppWeb.MoviesControllerTest do
   use MovixAppWeb.ConnCase
-  doctest MovixAppWeb.Api.MoviesController
+  import MovixApp.Fixtures
+  # doctest MovixAppWeb.Api.MoviesController
 
-  test "Movies GET /", %{conn: conn} do
-    conn = get(conn, "/api/movies")
+  describe "GET /movies" do
+    test "returns movies", %{conn: conn} do
+      movie = movie_fixture()
 
-    assert json_response(conn, 200)
+      conn = get(conn, "/api/movies")
+
+      assert %{"movies" => movies} = json_response(conn, 200)
+      assert Enum.any?(movies, &(&1["id"] == movie.id))
+    end
+  end
+
+  test "returns 404 for missing movie", %{conn: conn} do
+    assert_error_sent(404, fn ->
+      get(conn, "/api/movies/999999")
+    end)
   end
 
   test "id does exist", %{conn: conn} do

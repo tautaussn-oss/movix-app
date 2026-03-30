@@ -9,6 +9,23 @@ defmodule MovixAppWeb.Api.MoviesJSON do
     }
   end
 
+  def show_directors(%{directors: directors}) do
+    %{
+      directors:
+        for(
+          director <- directors,
+          do: data_director(director)
+        )
+    }
+  end
+
+  def data_director(director) do
+    %{
+      id: director.id,
+      full_name: "#{director.name} #{director.surname}"
+    }
+  end
+
   def show(%{movie: movie}) do
     data_movie(movie)
   end

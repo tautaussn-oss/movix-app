@@ -2,7 +2,7 @@ defmodule MovixApp.Movies do
   alias MovixApp.Repo
   alias MovixApp.Movies.Movie
   # alias MovixApp.Genres.Genre
-  # alias MovixApp.Directors.Director
+  alias MovixApp.Directors.Director
   # alias MovixAppWeb.Api.MoviesController
   alias MovixAppWeb.Api.CloudinaryHelper
   alias MovixApp.MoviesHelper
@@ -13,6 +13,10 @@ defmodule MovixApp.Movies do
     Movie
     |> Repo.all()
     |> Repo.preload([:genres, :director, :ratings])
+  end
+
+  def list_directors() do
+    Repo.all(Director)
   end
 
   def get_movie!(id) do
