@@ -18,13 +18,11 @@ const rateButtons = [1, 2, 3, 4, 5] as const;
 export function MovieDetail({
   movie,
   prevMovie,
-  nextMovie,
-  relatedMovies,
+  nextMovie
 }: {
   movie: Movie;
-  prevMovie: Movie | null;
-  nextMovie: Movie | null;
-  relatedMovies: Movie[];
+  prevMovie: number | null;
+  nextMovie: number | null;
 }) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
@@ -87,7 +85,7 @@ export function MovieDetail({
       <div className="w-full flex justify-between gap-3">
         {prevMovie ? (
           <Link
-            href={`/movies/${prevMovie.id}`}
+            href={`/movies/${prevMovie}`}
             className=" bg-white whitespace-nowrap w-1/2 md:max-w-1/3 rounded-full py-2 px-3 flex gap-3 items-center justify-center"
           >
             <MdArrowBackIosNew />
@@ -105,7 +103,7 @@ export function MovieDetail({
 
         {nextMovie ? (
           <Link
-            href={`/movies/${nextMovie.id}`}
+            href={`/movies/${nextMovie}`}
             className="whitespace-nowrap bg-white w-1/2 md:max-w-1/3 rounded-full py-2 px-3 flex gap-3 items-center justify-center"
           >
             Next Movie
@@ -189,13 +187,7 @@ export function MovieDetail({
         <h1 className="w-full border-b border-gray-300 text-white font-semibold text-2xl p-5">
           Related Movies
         </h1>
-        {relatedMovies.length > 0 ? (
-          <div>
-            <MovieGrid moviesList={relatedMovies} />
-          </div>
-        ) : (
-          <StatusMessage type="empty" message="No Related Movies!" />
-        )}
+        
       </div>
     </div>
   );

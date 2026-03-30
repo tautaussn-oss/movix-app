@@ -9,6 +9,7 @@ import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
 import { getFilteredMovies } from '@/lib/movies';
 import { GenreMultiSelect } from './GenreMultiSelect';
+import Link from 'next/link';
 
 const SORTING_OPTIONS = ['title', 'year', 'rating'];
 
@@ -65,10 +66,10 @@ export function MoviesClientSection({
       <SelectBar placeholder="Sort by:" options={SORTING_OPTIONS} onSelect={handleSort} />
 
       <div className="flex flex-col w-full md:flex-row justify-center gap-5">
-        <button className="text-white border border-white rounded-full w-full md:w-1/3 lg:w-1/4">
+        <Link href={'/movies/create'} className="text-white text-center border border-white rounded-full w-full md:w-1/3 lg:w-1/4">
           Add Movie <span className="font-bold text-lg">+</span>
-        </button>
-        <Switch checked={featured} onChange={handleFeatured} />
+        </Link>
+        <Switch label='Show Featured Movies Only' checked={featured} onChange={handleFeatured} />
       </div>
       {movies === null || movies.length === 0 ? (
         <StatusMessage type="empty" message="No movies found!" />

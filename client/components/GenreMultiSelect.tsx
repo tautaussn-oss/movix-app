@@ -23,7 +23,7 @@ export function GenreMultiSelect({ genres, onSelect }: GenreMultiSelectProp) {
 
   return (
     <div
-      className={`bg-white flex flex-col max-h-25 md:w-1/2 lg:w-1/3 overflow-y-scroll ${isActive ? 'rounded-2xl gap-3' : 'rounded-full'} w-full text-gray-500 px-3 py-1`}
+      className={`bg-white flex flex-col max-h-25 md:w-1/2 lg:w-1/3 overflow-y-scroll ${isActive ? 'rounded-2xl gap-3' : 'rounded-full'} w-full text-gray-500 px-3 py-2`}
     >
       <p className="flex justify-between items-center" onClick={() => setIsActive(!isActive)}>
         <span>Select genres:</span>

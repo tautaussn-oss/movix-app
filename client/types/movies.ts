@@ -15,12 +15,13 @@ export type SearchBarProp = {
 };
 
 export type SelectBarProp = {
-  placeholder:string
-  options:string[]
+  placeholder: string;
+  options: string[];
   onSelect: (value: string) => void;
 };
 
 export type SwitchProp = {
+  label: string;
   checked: boolean;
   onChange: (value: boolean) => void;
 };
@@ -32,17 +33,25 @@ export type DataMap = {
   movies: Movie[];
   genres: Genre[];
 };
-export type StatusMessageProp={
-  type:'empty'|'error'
-  message:string
+export type StatusMessageProp = {
+  type: 'empty' | 'error';
+  message: string;
+};
+export type FilterMoviesParams = {
+  search?: string;
+  genres?: string[];
+  featured?: boolean;
+  sortBy?: string;
+};
+export type GenreMultiSelectProp = {
+  genres: string[];
+  onSelect: (value: string[]) => void;
+};
+export interface Director {
+  id: number;
+  full_name: string;
 }
-export type FilterMoviesParams={
-  search?:string;
-  genres?:string[];
-  featured?:boolean;
-  sortBy?:string;
-}
-export type GenreMultiSelectProp={
-  genres:string[]
-  onSelect:(value:string[])=>void
-}
+export type CreatePageProps = {
+  genres: Genre[] | null;
+  directors: Director[] | null;
+};

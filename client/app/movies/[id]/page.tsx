@@ -1,13 +1,17 @@
 import { MovieDetail } from '@/components/MovieDetail';
 import { StatusMessage } from '@/components/StatusMessage';
-import { getData, getMovieByID } from '@/lib/movies';
-import { Movie } from '@/types/movies';
+import { getMovieByID, getPrevNextMovie } from '@/lib/movies';
+// implement related movies
 
 export default async function MovieDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  let movie, movies;
+  let movie, prevMovie, nextMovie;
   try {
-    [movie, movies] = await Promise.all([getMovieByID(id), getData('movies')]);
+    [movie, prevMovie, nextMovie] = await Promise.all([
+      getMovieByID(id),
+      getPrevNextMovie(id, 'prev'),
+      getPrevNextMovie(id, 'next'),
+    ]);
   } catch (e) {
     if (e instanceof Error) {
       return <StatusMessage type="error" message={e.message} />;
@@ -18,26 +22,7 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
   }
 
   if (movie === null) return <StatusMessage type="empty" message="This movie does not exist!" />;
-
-  let prevMovie = null;
-  let nextMovie = null;
-  let relatedMovies: Movie[] = [];
-
-  if (movies !== null) {
-    const currentIndex = movies.findIndex((m) => m.id === movie.id);
-
-    if (currentIndex > 0) {
-      prevMovie = movies[currentIndex - 1];
-    }
-
-    if (currentIndex < movies.length - 1) {
-      nextMovie = movies[currentIndex + 1];
-    }
-
-    relatedMovies = movies.filter(
-      (m) => m.id !== movie.id && m.genres.some((genre) => movie.genres.includes(genre)),
-    );
-  }
+  
 
   return (
     <div className="flex justify-center w-full">
@@ -45,7 +30,6 @@ export default async function MovieDetails({ params }: { params: Promise<{ id: s
         movie={movie}
         prevMovie={prevMovie}
         nextMovie={nextMovie}
-        relatedMovies={relatedMovies}
       />
     </div>
   );

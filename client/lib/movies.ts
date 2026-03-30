@@ -1,4 +1,4 @@
-import { DataMap, FilterMoviesParams, Movie } from '@/types/movies';
+import { DataMap, Director, FilterMoviesParams, Movie } from '@/types/movies';
 
 export async function getData<T extends keyof DataMap>(dataType: T): Promise<DataMap[T] | null> {
   const response = await fetch(`https://movix-app-az3n.onrender.com/api/${dataType}`);
@@ -39,4 +39,24 @@ export async function getFilteredMovies({
   const data = await response.json();
   return data.movies;
 }
-
+export async function createMovie(data: FormData) {
+  const response = await fetch('https://movix-app-az3n.onrender.com/api/movies', {
+    method: 'POST',
+    body: data,
+  });
+  if (!response.ok) throw new Error('Failed to create Movie!');
+  return response;
+}
+export async function getDirectors(): Promise<Director[] | null> {
+  const response = await fetch('https://movix-app-az3n.onrender.com/api/directors');
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error('No directors found!');
+  const data = await response.json();
+  return data.directors;
+}
+export async function getPrevNextMovie(id:string, option:string):Promise<number|null>{
+  const response=await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}/${option}`);
+  if(!response.ok) throw new Error('No prev/next');
+  const newId=await response.json();
+  return newId? newId.id : null;
+  }
