@@ -57,9 +57,8 @@ defmodule MovixAppWeb.MoviesControllerTest do
   end
 
   test "returns 404 for missing movie", %{conn: conn} do
-    assert_error_sent(404, fn ->
-      get(conn, "/api/movies/999999")
-    end)
+    conn = get(conn, "/api/movies/999999")
+    assert response(conn, 404)
   end
 
   test "next with invalid id returns 404", %{conn: conn} do

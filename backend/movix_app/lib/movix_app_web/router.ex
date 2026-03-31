@@ -24,6 +24,7 @@ defmodule MovixAppWeb.Router do
     get("/directors", MoviesController, :directors)
     get("/movies/:id/next", MoviesController, :next)
     get("/movies/:id/prev", MoviesController, :prev)
+    get("/movies/:id/related", MoviesController, :related_movies)
     post("/movies", MoviesController, :create)
     put("/ratings/:id", RatingsController, :create)
     put("/movies/:id", MoviesController, :update)
@@ -34,7 +35,7 @@ defmodule MovixAppWeb.Router do
     pipe_through(:browser)
 
     get("/", PageController, :home)
-    live "/home", HomeLive
+    live("/home", HomeLive)
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

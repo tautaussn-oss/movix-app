@@ -26,9 +26,15 @@ defmodule MovixApp.Movies do
     Repo.all(Director)
   end
 
-  def get_movie!(id) do
-    Repo.get!(Movie, id)
-    |> Repo.preload([:genres, :director, :ratings])
+  def get_movie(id) do
+    case Repo.get(Movie, id) do
+      nil ->
+        {:error, :not_found}
+
+      movie ->
+        movie = Repo.preload(movie, [:genres, :director, :ratings])
+        {:ok, movie}
+    end
   end
 
   def filter_movies(filter) do
@@ -36,6 +42,7 @@ defmodule MovixApp.Movies do
     |> filter_featured(filter["featured"])
     |> filter_by_genres(filter)
     |> filter_search(filter["search"])
+    |> filter_popular(filter["popular"])
     |> sort(filter["sort_by"])
     |> Repo.all()
     |> Repo.preload([:genres, :director, :ratings])
@@ -73,13 +80,17 @@ defmodule MovixApp.Movies do
     order_by(query, [m], desc: m.rating_avg)
   end
 
-  defp sort(query, "popular") do
-    order_by(query, [m], desc: m.rating_count)
-  end
-
   defp sort(query, _) do
     order_by(query, :id)
   end
+
+  defp filter_popular(query, "true") do
+    query
+    |> order_by([m], desc: m.rating_count)
+    |> limit(6)
+  end
+
+  defp filter_popular(query, _), do: query
 
   defp filter_featured(query, "true") do
     from(movie in query, where: movie.featured == true)
@@ -159,6 +170,35 @@ defmodule MovixApp.Movies do
     #       limit: 1
     #     )
     #   )
+  end
+
+  def get_related_movies(id) do
+    movie =
+      Movie
+      |> Repo.get(id)
+      |> Repo.preload(:genres)
+
+    case movie do
+      nil ->
+        {:error, :not_found}
+
+      movie ->
+        genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
+
+        related =
+          from(m in Movie,
+            join: g in assoc(m, :genres),
+            where: g.id in ^genre_ids and m.id != ^movie.id,
+            group_by: m.id,
+            order_by: [desc: count(g.id)],
+            limit: 6,
+            preload: [:genres]
+          )
+          |> Repo.all()
+          |> Repo.preload(:director)
+
+        {:ok, related}
+    end
   end
 end
 

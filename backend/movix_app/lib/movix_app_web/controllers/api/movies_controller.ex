@@ -12,8 +12,17 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def show(conn, %{"id" => id}) do
-    movie = Movies.get_movie!(id)
-    render(conn, :show, movie: movie)
+    case Movies.get_movie(id) do
+      {:ok, movie} ->
+        conn
+        |> put_status(:ok)
+        |> render(:show, movie: movie)
+
+      {:error, err} ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: err})
+    end
   end
 
   def create(conn, params) do
@@ -26,7 +35,7 @@ defmodule MovixAppWeb.Api.MoviesController do
            |> CloudinaryHelper.maybe_put("poster", poster_url)
            |> CloudinaryHelper.maybe_put("public_id_cloudinary", public_id),
          {:ok, movie} <- Movies.create_movie(attrs) do
-      movie = Movies.get_movie!(movie.id)
+      {:ok, movie} = Movies.get_movie(movie.id)
 
       conn
       |> put_status(:created)
@@ -50,7 +59,7 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def update(conn, %{"id" => id} = params) do
-    movie = Movies.get_movie!(id)
+    {:ok, movie} = Movies.get_movie(id)
 
     with {:ok, %{url: url, public_id: public_id}} <-
            CloudinaryHelper.handle_poster_update(movie, params),
@@ -59,7 +68,7 @@ defmodule MovixAppWeb.Api.MoviesController do
            |> CloudinaryHelper.maybe_put("poster", url)
            |> CloudinaryHelper.maybe_put("public_id_cloudinary", public_id),
          {:ok, movie} <- Movies.update_movie(movie, attrs) do
-      movie = Movies.get_movie!(movie.id)
+      {:ok, movie} = Movies.get_movie(movie.id)
 
       conn
       |> put_status(:ok)
@@ -73,7 +82,7 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def delete(conn, %{"id" => id}) do
-    movie = Movies.get_movie!(id)
+    {:ok, movie} = Movies.get_movie(id)
 
     case Movies.delete_movie(movie) do
       {:ok, _} ->
@@ -99,5 +108,10 @@ defmodule MovixAppWeb.Api.MoviesController do
   def directors(conn, _params) do
     directors = Movies.list_directors()
     render(conn, :show_directors, directors: directors)
+  end
+
+  def related_movies(conn, %{"id" => id}) do
+    {:ok, related_movies} = Movies.get_related_movies(id)
+    render(conn, :index, movies: related_movies)
   end
 end
