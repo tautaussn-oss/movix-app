@@ -33,7 +33,7 @@ defmodule MovixApp.Movies do
     |> filter_featured(filter["featured"])
     |> filter_by_genres(filter)
     |> filter_search(filter["search"])
-    |> filter_popular(filter["popular"])
+    # |> filter_popular(filter["popular"])
     |> sort(filter["sort_by"])
     |> Repo.all()
     |> Repo.preload([:genres, :director, :ratings])
@@ -71,17 +71,23 @@ defmodule MovixApp.Movies do
     order_by(query, [m], desc: m.rating_avg)
   end
 
-  defp sort(query, _) do
-    order_by(query, :id)
-  end
-
-  defp filter_popular(query, "true") do
+  defp sort(query, "popular") do
     query
     |> order_by([m], desc: m.rating_count)
     |> limit(6)
   end
 
-  defp filter_popular(query, _), do: query
+  defp sort(query, _) do
+    order_by(query, :id)
+  end
+
+  # defp filter_popular(query, "true") do
+  #   query
+  #   |> order_by([m], desc: m.rating_count)
+  #   |> limit(6)
+  # end
+
+  # defp filter_popular(query, _), do: query
 
   defp filter_featured(query, "true") do
     from(movie in query, where: movie.featured == true)
