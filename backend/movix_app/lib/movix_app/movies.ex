@@ -127,20 +127,13 @@ defmodule MovixApp.Movies do
 
   def get_next_movie(id) do
     # movie =
-    try do
-      case Repo.one(
-             from(m in Movie,
-               where: m.id > ^id,
-               order_by: [asc: m.id],
-               limit: 1
-             )
-           ) do
-        nil -> nil
-        movie -> {:ok, movie}
-      end
-    rescue
-      _e in Ecto.Query.CastError -> {:error, :invalid_id}
-    end
+    Repo.one(
+      from(m in Movie,
+        where: m.id > ^id,
+        order_by: [asc: m.id],
+        limit: 1
+      )
+    )
 
     # ||
     #   Repo.one(
@@ -152,21 +145,14 @@ defmodule MovixApp.Movies do
   end
 
   def get_prev_movie(id) do
-    # movie =
-    try do
-      case Repo.one(
-             from(m in Movie,
-               where: m.id < ^id,
-               order_by: [desc: m.id],
-               limit: 1
-             )
-           ) do
-        nil -> nil
-        movie -> {:ok, movie}
-      end
-    rescue
-      _e in Ecto.Query.CastError -> {:error, :invalid_id}
-    end
+    # movie
+    Repo.one(
+      from(m in Movie,
+        where: m.id < ^id,
+        order_by: [desc: m.id],
+        limit: 1
+      )
+    )
 
     #  ||
     #   Repo.one(
