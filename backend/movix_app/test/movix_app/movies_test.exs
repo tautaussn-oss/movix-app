@@ -77,9 +77,15 @@ defmodule MovixApp.MoviesTest do
       refute movies == movies_filtered
       assert Enum.all?(movies_filtered, fn m -> String.contains?(m.title, "dja") end)
     end
-    
+
     test "return sorted movies by title" do
       movies = movies_fixture()
+
+      movies_sorted = Movies.filter_movies(%{"sort_by" => "title"})
+
+      titles = Enum.map(movies_sorted, fn m -> m.title end)
+
+      assert titles == Enum.sort(titles)
     end
   end
 end

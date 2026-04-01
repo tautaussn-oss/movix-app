@@ -135,7 +135,7 @@ defmodule MovixApp.Movies do
                limit: 1
              )
            ) do
-        nil -> {:error, :not_found}
+        nil -> nil
         movie -> {:ok, movie}
       end
     rescue
@@ -161,7 +161,7 @@ defmodule MovixApp.Movies do
                limit: 1
              )
            ) do
-        nil -> {:error, :not_found}
+        nil -> nil
         movie -> {:ok, movie}
       end
     rescue
