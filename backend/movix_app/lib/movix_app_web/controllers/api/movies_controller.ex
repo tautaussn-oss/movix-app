@@ -96,12 +96,12 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def next(conn, %{"id" => id}) do
-    {:ok, movie} = Movies.get_next_movie(id)
+    movie = Movies.get_next_movie(id)
     render(conn, :show_id, movie: movie)
   end
 
   def prev(conn, %{"id" => id}) do
-    {:ok, movie} = Movies.get_prev_movie(id)
+    movie = Movies.get_prev_movie(id)
     render(conn, :show_id, movie: movie)
   end
 
