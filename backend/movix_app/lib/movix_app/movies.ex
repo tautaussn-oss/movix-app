@@ -9,31 +9,22 @@ defmodule MovixApp.Movies do
 
   import Ecto.Query
 
-  def list_all() do
-    # Movie
-    # |> Repo.all()
-    # |> Repo.preload([:genres, :director, :ratings])
-
-    %{
-      movies:
-        Movie
-        |> Repo.all()
-        |> Repo.preload([:genres, :director, :ratings])
-    }
-  end
-
   def list_directors() do
     Repo.all(Director)
   end
 
   def get_movie(id) do
-    case Repo.get(Movie, id) do
-      nil ->
-        {:error, :not_found}
+    try do
+      case Repo.get(Movie, id) do
+        nil ->
+          {:error, :not_found}
 
-      movie ->
-        movie = Repo.preload(movie, [:genres, :director, :ratings])
-        {:ok, movie}
+        movie ->
+          movie = Repo.preload(movie, [:genres, :director, :ratings])
+          {:ok, movie}
+      end
+    rescue
+      _e in Ecto.Query.CastError -> {:error, :invalid_id}
     end
   end
 
@@ -73,7 +64,7 @@ defmodule MovixApp.Movies do
   end
 
   defp sort(query, "year") do
-    order_by(query, :year)
+    order_by(query, [m], desc: m.year)
   end
 
   defp sort(query, "rating") do
@@ -136,13 +127,20 @@ defmodule MovixApp.Movies do
 
   def get_next_movie(id) do
     # movie =
-    Repo.one(
-      from(m in Movie,
-        where: m.id > ^id,
-        order_by: [asc: m.id],
-        limit: 1
-      )
-    )
+    try do
+      case Repo.one(
+             from(m in Movie,
+               where: m.id > ^id,
+               order_by: [asc: m.id],
+               limit: 1
+             )
+           ) do
+        nil -> {:error, :not_found}
+        movie -> {:ok, movie}
+      end
+    rescue
+      _e in Ecto.Query.CastError -> {:error, :invalid_id}
+    end
 
     # ||
     #   Repo.one(
@@ -155,13 +153,20 @@ defmodule MovixApp.Movies do
 
   def get_prev_movie(id) do
     # movie =
-    Repo.one(
-      from(m in Movie,
-        where: m.id < ^id,
-        order_by: [desc: m.id],
-        limit: 1
-      )
-    )
+    try do
+      case Repo.one(
+             from(m in Movie,
+               where: m.id < ^id,
+               order_by: [desc: m.id],
+               limit: 1
+             )
+           ) do
+        nil -> {:error, :not_found}
+        movie -> {:ok, movie}
+      end
+    rescue
+      _e in Ecto.Query.CastError -> {:error, :invalid_id}
+    end
 
     #  ||
     #   Repo.one(
@@ -173,31 +178,35 @@ defmodule MovixApp.Movies do
   end
 
   def get_related_movies(id) do
-    movie =
-      Movie
-      |> Repo.get(id)
-      |> Repo.preload(:genres)
+    try do
+      movie =
+        Movie
+        |> Repo.get(id)
+        |> Repo.preload(:genres)
 
-    case movie do
-      nil ->
-        {:error, :not_found}
+      case movie do
+        nil ->
+          {:error, :not_found}
 
-      movie ->
-        genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
+        movie ->
+          genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
 
-        related =
-          from(m in Movie,
-            join: g in assoc(m, :genres),
-            where: g.id in ^genre_ids and m.id != ^movie.id,
-            group_by: m.id,
-            order_by: [desc: count(g.id)],
-            limit: 6,
-            preload: [:genres]
-          )
-          |> Repo.all()
-          |> Repo.preload(:director)
+          related =
+            from(m in Movie,
+              join: g in assoc(m, :genres),
+              where: g.id in ^genre_ids and m.id != ^movie.id,
+              group_by: m.id,
+              order_by: [desc: count(g.id)],
+              limit: 6,
+              preload: [:genres]
+            )
+            |> Repo.all()
+            |> Repo.preload(:director)
 
-        {:ok, related}
+          {:ok, related}
+      end
+    rescue
+      _e in Ecto.Query.CastError -> {:error, :invalid_id}
     end
   end
 end

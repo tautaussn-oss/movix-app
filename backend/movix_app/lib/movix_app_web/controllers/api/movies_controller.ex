@@ -6,7 +6,7 @@ defmodule MovixAppWeb.Api.MoviesController do
   alias MovixAppWeb.Api.CloudinaryHelper
 
   def index(conn, params) do
-    IO.inspect(params, label: "PARAMS")
+    # IO.inspect(params, label: "PARAMS")
     movies = Movies.filter_movies(params)
     render(conn, :index, movies: movies)
   end
@@ -26,7 +26,7 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def create(conn, params) do
-    IO.inspect(params, label: "PARAMS")
+    # IO.inspect(params, label: "PARAMS")
 
     with {:ok, %{url: poster_url, public_id: public_id}} <-
            CloudinaryHelper.upload_to_cloudinary(params["poster"]),
@@ -96,12 +96,12 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def next(conn, %{"id" => id}) do
-    movie = Movies.get_next_movie(id)
+    {:ok, movie} = Movies.get_next_movie(id)
     render(conn, :show_id, movie: movie)
   end
 
   def prev(conn, %{"id" => id}) do
-    movie = Movies.get_prev_movie(id)
+    {:ok, movie} = Movies.get_prev_movie(id)
     render(conn, :show_id, movie: movie)
   end
 

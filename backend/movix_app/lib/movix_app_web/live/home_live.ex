@@ -3,8 +3,8 @@ defmodule MovixAppWeb.HomeLive do
 
   alias MovixApp.Movies
 
-  def mount(_params, _session, socket) do
-    socket = assign(socket, Movies.list_all())
+  def mount(params, _session, socket) do
+    socket = assign(socket, Movies.filter_movies(params))
 
     {:ok, socket}
   end
@@ -26,7 +26,7 @@ defmodule MovixAppWeb.HomeLive do
         </div>
       </div>
     </div>
-    
+
     <div class=""></div>
     """
   end
