@@ -2,8 +2,9 @@ defmodule MovixAppWeb.Api.MoviesController do
   use MovixAppWeb, :controller
 
   alias MovixApp.Movies
+  alias MovixApp.Directors
   # alias MovixApp.Movies.Movie
-  alias MovixAppWeb.Api.CloudinaryHelper
+  alias MovixApp.CloudinaryHelper
 
   def index(conn, params) do
     # IO.inspect(params, label: "PARAMS")
@@ -106,7 +107,7 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def directors(conn, _params) do
-    directors = Movies.list_directors()
+    directors = Directors.list_directors()
     render(conn, :show_directors, directors: directors)
   end
 

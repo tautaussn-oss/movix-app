@@ -40,10 +40,7 @@ defmodule MovixApp.Movies.Movie do
       :poster,
       :public_id_cloudinary,
       :featured,
-      :director_id,
-      :rating_avg,
-      :rating_all,
-      :rating_count
+      :director_id
     ])
     |> validate_required([
       :title,
@@ -65,7 +62,6 @@ defmodule MovixApp.Movies.Movie do
       less_than_or_equal_to: Date.utc_today().year + 1
     )
     |> validate_number(:duration, greater_than: 0, less_than: 400)
-    |> validate_inclusion(:featured, [true, false])
     |> assoc_constraint(:director)
   end
 end

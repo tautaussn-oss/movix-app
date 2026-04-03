@@ -1,4 +1,4 @@
-defmodule MovixAppWeb.Api.CloudinaryHelper do
+defmodule MovixApp.CloudinaryHelper do
   def maybe_put(map, _key, nil), do: map
   def maybe_put(map, key, value), do: Map.put(map, key, value)
 
@@ -28,12 +28,7 @@ defmodule MovixAppWeb.Api.CloudinaryHelper do
   def delete_from_cloudinary(nil), do: :ok
 
   def delete_from_cloudinary(public_id) do
-    case Cloudex.delete(public_id) do
-      {:ok, _} ->
-        :ok
-
-      {:error, reason} ->
-        {:error, reason}
-    end
+    Cloudex.delete(public_id)
+    :ok
   end
 end

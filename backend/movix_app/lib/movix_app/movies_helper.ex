@@ -12,13 +12,23 @@ defmodule MovixApp.MoviesHelper do
     [name, surname] = String.split(full_name, " ")
 
     case Repo.get_by(Director, name: name, surname: surname) do
-      nil -> {:error, :director_not_found}
-      director -> {:ok, director}
+      nil ->
+        director =
+          %Director{}
+          |> Director.changeset(%{name: name, surname: surname})
+
+        case Repo.insert(director) do
+          {:ok, director} -> {:ok, director}
+          {:error, changeset} -> {:error, changeset}
+        end
+
+      director ->
+        {:ok, director}
     end
   end
 
   defp get_genres_by_names(names) do
-    Repo.all(from(g in Genre, where: g.genre in ^names))
+    Repo.all(from(g in Genre, where: g.name in ^names))
   end
 
   # defp normalize_attrs(attrs) do

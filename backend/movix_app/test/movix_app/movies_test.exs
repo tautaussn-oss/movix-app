@@ -17,7 +17,7 @@ defmodule MovixApp.MoviesTest do
       assert fetchedd_movie.id == movie.id
     end
 
-    test "returns not_found error  when provided with wrong movie id" do
+    test "returns not_found error when provided with wrong movie id" do
       movie = movie_fixture()
       assert {:error, :not_found} == Movies.get_movie("9999999")
     end

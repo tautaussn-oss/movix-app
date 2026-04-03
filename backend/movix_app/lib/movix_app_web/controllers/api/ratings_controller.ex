@@ -4,18 +4,13 @@ defmodule MovixAppWeb.Api.RatingsController do
   alias MovixApp.Ratings
 
   def create(conn, %{"id" => movie_id, "rating" => rating_value}) do
-    attrs = %{
-      "movie_id" => movie_id,
-      "rating" => rating_value
-    }
-
-    case Ratings.add_rating(attrs) do
-      {1, _} ->
+    case Ratings.add_rating(movie_id, rating_value) do
+      {:ok, _} ->
         conn
         |> put_status(:created)
-        |> json(%{ok: "proslo"})
+        |> json(%{ok: "Added rating"})
 
-      {0, _} ->
+      {:error, _} ->
         conn
         |> put_status(:not_found)
         |> json(%{error: "Movie not found"})

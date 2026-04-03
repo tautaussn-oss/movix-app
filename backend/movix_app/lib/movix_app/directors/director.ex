@@ -22,5 +22,7 @@ defmodule MovixApp.Directors.Director do
       :name,
       :surname
     ])
+    |> validate_length(:name, max: 255)
+    |> validate_length(:surname, max: 255)
   end
 end

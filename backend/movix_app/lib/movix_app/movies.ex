@@ -4,7 +4,7 @@ defmodule MovixApp.Movies do
   # alias MovixApp.Genres.Genre
   alias MovixApp.Directors.Director
   # alias MovixAppWeb.Api.MoviesController
-  alias MovixAppWeb.Api.CloudinaryHelper
+  alias MovixApp.CloudinaryHelper
   alias MovixApp.MoviesHelper
 
   import Ecto.Query
@@ -14,13 +14,14 @@ defmodule MovixApp.Movies do
   end
 
   def get_movie(id) do
+    movie = Movie |> preload([:genres, :director, :ratings])
+
     try do
-      case Repo.get(Movie, id) do
+      case Repo.get(movie, id) do
         nil ->
           {:error, :not_found}
 
         movie ->
-          movie = Repo.preload(movie, [:genres, :director, :ratings])
           {:ok, movie}
       end
     rescue
@@ -28,15 +29,24 @@ defmodule MovixApp.Movies do
     end
   end
 
+  def list_all, do: filter_movies(%{})
+
+  def filter_movies(%{"sort_by" => "popular"}) do
+    Movie
+    |> order_by([m], desc: m.rating_count)
+    |> limit(6)
+    |> preload([:genres, :director, :ratings])
+    |> Repo.all()
+  end
+
   def filter_movies(filter) do
     Movie
     |> filter_featured(filter["featured"])
     |> filter_by_genres(filter)
     |> filter_search(filter["search"])
-    # |> filter_popular(filter["popular"])
     |> sort(filter["sort_by"])
+    |> preload([:genres, :director, :ratings])
     |> Repo.all()
-    |> Repo.preload([:genres, :director, :ratings])
   end
 
   defp filter_by_genres(query, %{"genre" => genres}) do
@@ -71,11 +81,11 @@ defmodule MovixApp.Movies do
     order_by(query, [m], desc: m.rating_avg)
   end
 
-  defp sort(query, "popular") do
-    query
-    |> order_by([m], desc: m.rating_count)
-    |> limit(6)
-  end
+  # defp sort(query, "popular") do
+  #   query
+  #   |> order_by([m], desc: m.rating_count)
+  #   |> limit(6)
+  # end
 
   defp sort(query, _) do
     order_by(query, :id)
@@ -103,9 +113,6 @@ defmodule MovixApp.Movies do
            |> Ecto.Changeset.put_assoc(:genres, genres)
            |> Repo.insert() do
       {:ok, movie}
-    else
-      {:error, reason} ->
-        {:error, reason}
     end
   end
 
@@ -115,20 +122,18 @@ defmodule MovixApp.Movies do
       |> Movie.changeset(attrs)
       |> Ecto.Changeset.put_assoc(:genres, genres)
       |> Repo.update()
-    else
-      {:error, reason} -> {:error, reason}
     end
   end
 
   def delete_movie(%Movie{} = movie) do
-    Repo.transaction(fn ->
-      case CloudinaryHelper.delete_from_cloudinary(movie.public_id_cloudinary) do
-        :ok -> :ok
-        {:error, err} -> Repo.rollback(err)
-      end
+    case Repo.delete(movie) do
+      {:ok, _} ->
+        CloudinaryHelper.delete_from_cloudinary(movie.public_id_cloudinary)
+        {:ok, "Izbrisan"}
 
-      Repo.delete(movie)
-    end)
+      {:error, error} ->
+        {:error, error}
+    end
   end
 
   def get_next_movie(id) do
@@ -171,16 +176,11 @@ defmodule MovixApp.Movies do
 
   def get_related_movies(id) do
     try do
-      movie =
-        Movie
-        |> Repo.get(id)
-        |> Repo.preload(:genres)
-
-      case movie do
-        nil ->
+      case get_movie(id) do
+        {:ok, nil} ->
           {:error, :not_found}
 
-        movie ->
+        {:ok, movie} ->
           genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
 
           related =
@@ -192,8 +192,8 @@ defmodule MovixApp.Movies do
               limit: 6,
               preload: [:genres]
             )
+            |> preload(:director)
             |> Repo.all()
-            |> Repo.preload(:director)
 
           {:ok, related}
       end
