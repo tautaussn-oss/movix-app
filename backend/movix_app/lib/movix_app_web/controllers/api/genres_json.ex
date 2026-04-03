@@ -18,14 +18,14 @@ defmodule MovixAppWeb.Api.GenresJSON do
   defp datag(genre) do
     %{
       id: genre.id,
-      genre: genre.genre
+      genre: genre.name
     }
   end
 
   defp data(genre) do
     %{
       id: genre.id,
-      genre: genre.genre,
+      genre: genre.name,
       movies: Enum.map(genre.movies, fn m -> MoviesJSON.data_movie(m) end)
     }
   end

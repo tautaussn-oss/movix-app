@@ -4,7 +4,7 @@ defmodule MovixApp.Genres.Genre do
   alias MovixApp.Movies.Movie
 
   schema "genres" do
-    field(:genre, :string)
+    field(:name, :string)
 
     many_to_many(:movies, Movie,
       join_through: "movie_genres",
@@ -17,10 +17,11 @@ defmodule MovixApp.Genres.Genre do
   def changeset(genre, attrs) do
     genre
     |> cast(attrs, [
-      :genre
+      :name
     ])
     |> validate_required([
-      :genre
+      :name
     ])
+    |> unique_constraint(:name)
   end
 end
