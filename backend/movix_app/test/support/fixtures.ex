@@ -12,8 +12,8 @@ defmodule MovixApp.Fixtures do
   end
 
   def genre_fixture(name \\ "Action") do
-    Repo.get_by(Genre, genre: name) ||
-      Repo.insert!(%Genre{genre: name})
+    Repo.get_by(Genre, name: name) ||
+      Repo.insert!(%Genre{name: name})
   end
 
   def movie_fixture(attrs \\ %{}) do

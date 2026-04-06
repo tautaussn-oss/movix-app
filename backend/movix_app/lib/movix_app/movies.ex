@@ -1,9 +1,7 @@
 defmodule MovixApp.Movies do
   alias MovixApp.Repo
   alias MovixApp.Movies.Movie
-  # alias MovixApp.Genres.Genre
   alias MovixApp.Directors.Director
-  # alias MovixAppWeb.Api.MoviesController
   alias MovixApp.CloudinaryHelper
   alias MovixApp.MoviesHelper
 
@@ -54,7 +52,7 @@ defmodule MovixApp.Movies do
 
     from(movie in query,
       join: g in assoc(movie, :genres),
-      where: g.genre in ^genres,
+      where: g.name in ^genres,
       group_by: movie.id,
       having: count(g.id) == ^length(genres),
       preload: [:genres]
@@ -81,23 +79,9 @@ defmodule MovixApp.Movies do
     order_by(query, [m], desc: m.rating_avg)
   end
 
-  # defp sort(query, "popular") do
-  #   query
-  #   |> order_by([m], desc: m.rating_count)
-  #   |> limit(6)
-  # end
-
   defp sort(query, _) do
     order_by(query, :id)
   end
-
-  # defp filter_popular(query, "true") do
-  #   query
-  #   |> order_by([m], desc: m.rating_count)
-  #   |> limit(6)
-  # end
-
-  # defp filter_popular(query, _), do: query
 
   defp filter_featured(query, "true") do
     from(movie in query, where: movie.featured == true)
@@ -137,7 +121,6 @@ defmodule MovixApp.Movies do
   end
 
   def get_next_movie(id) do
-    # movie =
     Repo.one(
       from(m in Movie,
         where: m.id > ^id,
@@ -145,18 +128,9 @@ defmodule MovixApp.Movies do
         limit: 1
       )
     )
-
-    # ||
-    #   Repo.one(
-    #     from(m in Movie,
-    #       order_by: [asc: m.id],
-    #       limit: 1
-    #     )
-    #   )
   end
 
   def get_prev_movie(id) do
-    # movie
     Repo.one(
       from(m in Movie,
         where: m.id < ^id,
@@ -164,14 +138,6 @@ defmodule MovixApp.Movies do
         limit: 1
       )
     )
-
-    #  ||
-    #   Repo.one(
-    #     from(m in Movie,
-    #       order_by: [desc: m.id],
-    #       limit: 1
-    #     )
-    #   )
   end
 
   def get_related_movies(id) do
@@ -202,21 +168,3 @@ defmodule MovixApp.Movies do
     end
   end
 end
-
-# import Ecto.Query
-
-# query =
-#   from m in Movie,
-#     left_join: r in Rating, on: r.movie_id == m.id,
-#     preload: [:genres],
-#     group_by: m.id,
-#     select: %{
-#       id: m.id,
-#       title: m.title,
-#       year: m.year,
-#       description: m.description,
-#       genres: m.genres,
-#       average_rating: avg(r.rating)
-#     }
-
-# movies = Repo.all(query)

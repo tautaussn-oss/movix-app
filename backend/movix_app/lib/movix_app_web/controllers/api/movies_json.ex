@@ -45,14 +45,6 @@ defmodule MovixAppWeb.Api.MoviesJSON do
   end
 
   def data_movie(movie) do
-    # rating_values = Enum.map(movie.ratings, fn r -> r.rating end)
-
-    # average =
-    #   case rating_values do
-    #     [] -> nil
-    #     _ -> Enum.sum(rating_values) / length(rating_values)
-    #   end
-
     %{
       id: movie.id,
       title: movie.title,
@@ -62,7 +54,6 @@ defmodule MovixAppWeb.Api.MoviesJSON do
       poster: movie.poster,
       featured: movie.featured,
       genres: Enum.map(movie.genres, fn g -> g.name end),
-      # rating: average,
       rating: movie.rating_avg,
       director: "#{movie.director.name} #{movie.director.surname}"
     }

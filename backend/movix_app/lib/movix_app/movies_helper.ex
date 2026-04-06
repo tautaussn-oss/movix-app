@@ -31,26 +31,6 @@ defmodule MovixApp.MoviesHelper do
     Repo.all(from(g in Genre, where: g.name in ^names))
   end
 
-  # defp normalize_attrs(attrs) do
-  #   attrs
-  #   |> Map.update("year", nil, &parse_int/1)
-  #   |> Map.update("duration", nil, &parse_int/1)
-  #   |> Map.update("featured", false, &parse_bool/1)
-  # end
-
-  # defp parse_int(nil), do: nil
-  # defp parse_int(val) when is_integer(val), do: val
-
-  # defp parse_int(val) when is_binary(val) do
-  #   case Integer.parse(val) do
-  #     {int, _} -> int
-  #     :error -> nil
-  #   end
-  # end
-
-  # defp parse_bool(val) when val in [true, "true", "1", 1, "on"], do: true
-  # defp parse_bool(_), do: false
-
   def preprocess_genres_and_director(attrs) do
     genres_names =
       case Map.get(attrs, "genres") do

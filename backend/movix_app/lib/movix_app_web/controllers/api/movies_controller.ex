@@ -3,7 +3,6 @@ defmodule MovixAppWeb.Api.MoviesController do
 
   alias MovixApp.Movies
   alias MovixApp.Directors
-  # alias MovixApp.Movies.Movie
   alias MovixApp.CloudinaryHelper
 
   def index(conn, params) do
@@ -42,20 +41,10 @@ defmodule MovixAppWeb.Api.MoviesController do
       |> put_status(:created)
       |> render(:show, movie: movie)
     else
-      # {:error, :director_not_found} ->
-      #   conn
-      #   |> put_status(:bad_request)
-      #   |> json(%{error: "Director not found"})
-
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
         |> json(%{errors: changeset})
-
-        # {:error, reason} ->
-        #   conn
-        #   |> put_status(:bad_request)
-        #   |> json(%{error: inspect(reason)})
     end
   end
 
