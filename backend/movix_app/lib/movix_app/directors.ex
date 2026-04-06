@@ -1,6 +1,6 @@
 defmodule MovixApp.Directors do
   alias MovixApp.Repo
-  alias MoviesApp.Directors.Director
+  alias MovixApp.Directors.Director
 
   def list_directors() do
     Repo.all(Director)
