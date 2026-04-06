@@ -121,23 +121,37 @@ defmodule MovixApp.Movies do
   end
 
   def get_next_movie(id) do
-    Repo.one(
-      from(m in Movie,
-        where: m.id > ^id,
-        order_by: [asc: m.id],
-        limit: 1
-      )
-    )
+    try do
+      case Repo.one(
+             from(m in Movie,
+               where: m.id > ^id,
+               order_by: [asc: m.id],
+               limit: 1
+             )
+           ) do
+        nil -> {:error, :not_found}
+        movie -> {:ok, movie}
+      end
+    rescue
+      _e in Ecto.Query.CastError -> {:error, :invalid_id}
+    end
   end
 
   def get_prev_movie(id) do
-    Repo.one(
-      from(m in Movie,
-        where: m.id < ^id,
-        order_by: [desc: m.id],
-        limit: 1
-      )
-    )
+    try do
+      case Repo.one(
+             from(m in Movie,
+               where: m.id < ^id,
+               order_by: [desc: m.id],
+               limit: 1
+             )
+           ) do
+        nil -> {:error, :not_found}
+        movie -> {:ok, movie}
+      end
+    rescue
+      _e in Ecto.Query.CastError -> {:error, :invalid_id}
+    end
   end
 
   def get_related_movies(id) do

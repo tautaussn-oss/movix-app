@@ -86,13 +86,17 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def next(conn, %{"id" => id}) do
-    movie = Movies.get_next_movie(id)
-    render(conn, :show_id, movie: movie)
+    case Movies.get_next_movie(id) do
+      {:ok, movie} -> conn |> put_status(:ok) |> render(:show_id, movie: movie)
+      {:error, err} -> conn |> put_status(:not_found) |> json(%{error: err})
+    end
   end
 
   def prev(conn, %{"id" => id}) do
-    movie = Movies.get_prev_movie(id)
-    render(conn, :show_id, movie: movie)
+    case Movies.get_prev_movie(id) do
+      {:ok, movie} -> conn |> put_status(:ok) |> render(:show_id, movie: movie)
+      {:error, err} -> conn |> put_status(:not_found) |> json(%{error: err})
+    end
   end
 
   def directors(conn, _params) do
