@@ -15,7 +15,7 @@ defmodule MovixApp.Ratings.Rating do
     rating
     |> cast(attrs, [:rating, :movie_id])
     |> validate_required([:rating, :movie_id])
-    |> validate_number(:rating, greater_than: 0, less_than_or_equal_to: 5)
+    |> validate_number(:rating, greater_than: 0, less_than_or_equal_to: 10)
     |> assoc_constraint(:movie)
   end
 end
