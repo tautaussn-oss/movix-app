@@ -1,23 +1,38 @@
-import { Favorites } from '@/components/Favorites';
-import { MovieGrid } from '@/components/MovieGrid';
+import { MoviesViewSwitch } from '@/components/MoviesViewSwitch';
 import { StatusMessage } from '@/components/StatusMessage';
-import { getData } from '@/lib/movies';
+import { getData, getFilteredMovies } from '@/lib/movies';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default async function Home() {
-  let movies;
+  let movies, featured, popular, genres;
   try {
-    movies = await getData('movies');
+    [movies, featured, popular, genres] = await Promise.all([
+      getData('movies'),
+      getFilteredMovies({ featured: true }),
+      getFilteredMovies({ sortBy: 'popular' }),
+      getData('genres'),
+    ]);
   } catch {
-    return <StatusMessage type="error" message={'Something went wrong while loading movies!'} />;
+    return (
+      <StatusMessage
+        type="error"
+        message={'Something went wrong while loading filterded movies!'}
+      />
+    );
   }
-  if (movies === null) return <StatusMessage type="empty" message="Movies not found!" />;
-  const featured = movies.filter((movie) => movie.featured);
+
   return (
-    <main className="flex flex-col gap-5 items-center p-5">
-      <h1 className="text-white font-bold ">Featured Movies:</h1>
-      <MovieGrid moviesList={featured} />
-      <h1 className="text-white font-bold ">Favorites:</h1>
-      <Favorites movies={movies} />
+    <main className="flex flex-col gap-5 items-center ">
+      <div className="relative w-full h-96">
+        <Image src="/background.png" alt={'No poster Found!'} className="object-cover" fill />
+        <div className="absolute bottom-0 left-0 w-full h-full bg-linear-to-t from-[#141414] to-transparent ">
+          <h1 className="absolute bottom-2 left-[15%] w-[70%] text-center text-white font-bold text-2xl">
+            Explore and find your favorite Movies, TV shows and more
+          </h1>
+        </div>
+      </div>
+      <MoviesViewSwitch movies={movies} featured={featured} popular={popular} />
     </main>
   );
 }

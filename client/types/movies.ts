@@ -11,11 +11,14 @@ export interface Movie {
   featured: boolean;
 }
 export type SearchBarProp = {
+  searchText: string;
   onSearch: (value: string) => void;
+  onChange: (value: string) => void;
 };
 
 export type SelectBarProp = {
   placeholder: string;
+  selected?: string;
   options: string[];
   onSelect: (value: string) => void;
 };
@@ -44,7 +47,8 @@ export type FilterMoviesParams = {
   sortBy?: string;
 };
 export type GenreMultiSelectProp = {
-  genres: string[];
+  genres: Genre[]|null;
+  selected?: string[];
   onSelect: (value: string[]) => void;
 };
 export interface Director {
@@ -54,4 +58,8 @@ export interface Director {
 export type CreatePageProps = {
   genres: Genre[] | null;
   directors: Director[] | null;
+};
+export type MovieFormProps = {
+  movie?: Movie | undefined;
+  genres: Genre[] | null;
 };

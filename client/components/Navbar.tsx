@@ -1,5 +1,4 @@
 'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -8,11 +7,11 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-black border-b border-gray-400 text-white">
+    <nav className="bg-[#141414]  text-white">
       <div className="flex justify-between items-center p-3 md:p-5">
         <div className="flex items-center gap-3">
-          <Image src="/logo.png" alt="logo" width={70} height={30} className="rounded" />
-          <h1 className="text-2xl font-bold hidden md:block">Movie Library</h1>
+          <Image src="/movieLogo.png" alt="logo" width={70} height={25} className="rounded-full" />
+          <h1 className="text-2xl font-bold hidden md:block">Movix</h1>
         </div>
 
         <div className="hidden md:flex gap-3 items-center">
@@ -34,10 +33,18 @@ export function Navbar() {
 
       {isOpen && (
         <div className="md:hidden flex flex-col items-center w-full gap-3">
-          <Link href="/" className="w-full text-center font-bold border-y border-gray-400 p-3" onClick={() => setIsOpen(false)}>
+          <Link
+            href="/"
+            className="w-full text-center font-bold border-y border-gray-400 p-3"
+            onClick={() => setIsOpen(false)}
+          >
             Home
           </Link>
-          <Link href="/movies" className="w-full text-center font-bold pb-3" onClick={() => setIsOpen(false)}>
+          <Link
+            href="/movies"
+            className="w-full text-center border-b border-gray-400 font-bold pb-3"
+            onClick={() => setIsOpen(false)}
+          >
             Movies
           </Link>
         </div>

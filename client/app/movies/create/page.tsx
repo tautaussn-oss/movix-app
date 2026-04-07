@@ -1,12 +1,17 @@
-import { CreateMoviePage } from "@/components/CreateMoviePage";
-import { getData, getDirectors } from "@/lib/movies";
+import { MovieForm } from '@/components/MovieForm';
+import { StatusMessage } from '@/components/StatusMessage';
+import { getData } from '@/lib/movies';
 
-export default async function CreateMovie(){
-    //handle error state
-    const [genres, directors]=await Promise.all([getData('genres'),getDirectors()]);
-    return (
-        <div>
-            <CreateMoviePage genres={genres} directors={directors}/>
-        </div>
-    )
+export default async function CreateMovie() {
+  let genres;
+  try{
+    genres=await getData('genres');
+  } catch {
+    return <StatusMessage type='error' message='Genres not found!'/>
+  }
+  return (
+    <div className='w-full h-full p-5 flex justify-center'>
+      <MovieForm genres={genres} />
+    </div>
+  );
 }

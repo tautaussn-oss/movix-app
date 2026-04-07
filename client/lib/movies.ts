@@ -54,9 +54,25 @@ export async function getDirectors(): Promise<Director[] | null> {
   const data = await response.json();
   return data.directors;
 }
-export async function getPrevNextMovie(id:string, option:string):Promise<number|null>{
-  const response=await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}/${option}`);
-  if(!response.ok) throw new Error('No prev/next');
-  const newId=await response.json();
-  return newId? newId.id : null;
-  }
+export async function getPrevNextMovie(id: string, option: string): Promise<number | null> {
+  const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}/${option}`);
+  if(response.status===404) return null;
+  if (!response.ok) throw new Error('No prev/next');
+  const newId = await response.json();
+  return newId ? newId.id : null;
+}
+export async function getRelatedMovies(id: string): Promise<Movie[] | null> {
+  const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}/related`);
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error('No Related Movies found!');
+  const data = await response.json();
+  return data.movies;
+}
+export async function editMovie(id: string, data: FormData) {
+  const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}`, {
+    method: 'PUT',
+    body: data,
+  });
+  if (!response.ok) throw new Error('Failed to edit Movie!');
+  return response;
+}

@@ -13,6 +13,7 @@ export function Favorites({ movies }: { movies: Movie[] }) {
   }, []);
 
   const favoriteMovies = movies.filter((m) => favorites.includes(m.id));
-  if (favoriteMovies.length === 0) return <StatusMessage type='empty' message="No favorite Movies!" />;
+  if (favoriteMovies.length === 0)
+    return <StatusMessage type="empty" message="No favorite Movies!" />;
   return <MovieGrid moviesList={favoriteMovies} />;
 }

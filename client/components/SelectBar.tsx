@@ -1,22 +1,20 @@
 import { SelectBarProp } from '@/types/movies';
-export function SelectBar({ placeholder, options, onSelect }: SelectBarProp ){
-  
+export function SelectBar({ placeholder, selected, options, onSelect }: SelectBarProp) {
   return (
     <select
+      value={selected ? selected : ''}
       onChange={(e) => onSelect(e.target.value)}
-      disabled={options.length===0}
-      className="w-full md:w-1/2 lg:w-1/3 rounded-full bg-gray-200 px-3 py-2 text-gray-500 cursor-pointer"
+      disabled={options.length === 0}
+      className="w-full rounded-lg bg-amber-100 text-center px-3 py-2 text-black cursor-pointer"
     >
       <option value={''}>{placeholder}</option>
-      { 
-        options.map((option) => {
-          return (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          );
-        })
-      }
+      {options.map((option) => {
+        return (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        );
+      })}
     </select>
   );
 }
