@@ -1,20 +1,15 @@
 defmodule MovixApp.Movies do
   alias MovixApp.Repo
   alias MovixApp.Movies.Movie
-  alias MovixApp.Directors.Director
   alias MovixApp.CloudinaryHelper
   alias MovixApp.MoviesHelper
 
   import Ecto.Query
 
-  def list_directors() do
-    Repo.all(Director)
-  end
-
   def get_movie(id) do
-    movie = Movie |> preload([:genres, :director, :ratings])
-
     try do
+      movie = Movie |> preload([:genres, :director, :ratings])
+
       case Repo.get(movie, id) do
         nil ->
           {:error, :not_found}
@@ -110,13 +105,14 @@ defmodule MovixApp.Movies do
   end
 
   def delete_movie(%Movie{} = movie) do
-    case Repo.delete(movie) do
-      {:ok, _} ->
+    try do
+      with {:ok, movie} <- Repo.delete(movie) do
         CloudinaryHelper.delete_from_cloudinary(movie.public_id_cloudinary)
-        {:ok, "Izbrisan"}
-
-      {:error, error} ->
-        {:error, error}
+        {:ok, movie}
+      end
+    rescue
+      _ ->
+        {:error, "Failed to delete movie"}
     end
   end
 
@@ -155,30 +151,29 @@ defmodule MovixApp.Movies do
   end
 
   def get_related_movies(id) do
-    try do
-      case get_movie(id) do
-        {:ok, nil} ->
-          {:error, :not_found}
+    case get_movie(id) do
+      {:error, :invalid_id} ->
+        {:error, :invalid_id}
 
-        {:ok, movie} ->
-          genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
+      {:error, :not_found} ->
+        {:error, :not_found}
 
-          related =
-            from(m in Movie,
-              join: g in assoc(m, :genres),
-              where: g.id in ^genre_ids and m.id != ^movie.id,
-              group_by: m.id,
-              order_by: [desc: count(g.id)],
-              limit: 6,
-              preload: [:genres]
-            )
-            |> preload(:director)
-            |> Repo.all()
+      {:ok, movie} ->
+        genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
 
-          {:ok, related}
-      end
-    rescue
-      _e in Ecto.Query.CastError -> {:error, :invalid_id}
+        related =
+          from(m in Movie,
+            join: g in assoc(m, :genres),
+            where: g.id in ^genre_ids and m.id != ^movie.id,
+            group_by: m.id,
+            order_by: [desc: count(g.id)],
+            limit: 6,
+            preload: [:genres]
+          )
+          |> preload(:director)
+          |> Repo.all()
+
+        {:ok, related}
     end
   end
 end

@@ -1,11 +1,9 @@
-# test/support/fixtures.ex
 defmodule MovixApp.Fixtures do
   alias MovixApp.Repo
   alias MovixApp.Movies.Movie
   alias MovixApp.Genres.Genre
+  alias MovixApp.Ratings
   alias MovixApp.Directors.Director
-
-  defp random_bool, do: Enum.random([true, false])
 
   def director_fixture do
     Repo.insert!(%Director{name: "Quentin", surname: "Tarantino"})
@@ -18,26 +16,36 @@ defmodule MovixApp.Fixtures do
 
   def movie_fixture(attrs \\ %{}) do
     director = director_fixture()
-    _genre = genre_fixture()
+    genres = Map.get(attrs, :genres, [genre_fixture()])
+    ratings = Map.get(attrs, :ratings, [])
 
-    movie =
-      %Movie{
+    movie_attrs =
+      %{
         title: "Movie #{System.unique_integer()}",
         year: 2020,
-        description: "desc",
+        description: "description",
         duration: 120,
-        featured: random_bool(),
+        featured: true,
         poster: "url",
         public_id_cloudinary: "pid",
-        director_id: director.id,
-        rating_all: 0,
-        rating_avg: 0.0,
-        rating_count: 0
+        director_id: director.id
       }
-      |> Map.merge(attrs)
+      |> Map.merge(Map.drop(attrs, [:genres, :ratings]))
+
+    movie =
+      %Movie{}
+      |> Movie.changeset(movie_attrs)
+      |> Ecto.Changeset.put_assoc(:genres, genres)
       |> Repo.insert!()
 
-    Repo.preload(movie, [:genres, :director, :ratings])
+    # apply ratings through real logic
+    Enum.each(ratings, fn r ->
+      Ratings.add_rating(movie.id, r)
+    end)
+
+    # preload = CRITICAL
+    Repo.get!(Movie, movie.id)
+    |> Repo.preload([:genres, :director, :ratings])
   end
 
   def movies_fixture(count \\ 10, attrs \\ %{}) do

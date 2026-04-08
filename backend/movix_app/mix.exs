@@ -11,7 +11,16 @@ defmodule MovixApp.MixProject do
       aliases: aliases(),
       deps: deps(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
-      listeners: [Phoenix.CodeReloader]
+      listeners: [Phoenix.CodeReloader],
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "test.watch": :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test,
+        docs: "docs"
+      ]
     ]
   end
 
@@ -68,7 +77,8 @@ defmodule MovixApp.MixProject do
       {:bandit, "~> 1.5"},
       {:cors_plug, "~> 3.0"},
       {:dotenv, "~> 3.0"},
-      {:cloudex, "~> 1.4"}
+      {:cloudex, "~> 1.4"},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 

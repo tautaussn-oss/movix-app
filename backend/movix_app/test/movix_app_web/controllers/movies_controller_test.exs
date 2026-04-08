@@ -16,8 +16,8 @@ defmodule MovixAppWeb.MoviesControllerTest do
         surname: "Test#{System.unique_integer()}"
       })
 
-    genre1 = Repo.insert!(%Genre{genre: "Action#{System.unique_integer()}"})
-    genre2 = Repo.insert!(%Genre{genre: "Drama#{System.unique_integer()}"})
+    genre1 = Repo.insert!(%Genre{name: "Action#{System.unique_integer()}"})
+    genre2 = Repo.insert!(%Genre{name: "Drama#{System.unique_integer()}"})
 
     movie =
       %Movie{
@@ -111,8 +111,8 @@ defmodule MovixAppWeb.MoviesControllerTest do
   end
 
   test "does not return movie if only one of multiple genres matches", %{conn: conn} do
-    g1 = Repo.insert!(%Genre{genre: "Action"})
-    _g2 = Repo.insert!(%Genre{genre: "Drama"})
+    g1 = Repo.insert!(%Genre{name: "Action"})
+    _g2 = Repo.insert!(%Genre{name: "Drama"})
 
     director = Repo.insert!(%Director{name: "A", surname: "B"})
 

@@ -4,10 +4,6 @@ defmodule MovixApp.MoviesHelper do
   alias MovixApp.Repo
   import Ecto.Query
 
-  def preload_all(query) do
-    preload(query, [:genres, :director, :ratings])
-  end
-
   defp get_director_by_full_name(full_name) do
     [name, surname] = String.split(full_name, " ")
 

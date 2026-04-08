@@ -9,7 +9,16 @@ defmodule MovixAppWeb.Api.GenresController do
   end
 
   def show(conn, %{"id" => id}) do
-    genre = Genres.get_genre!(id)
-    render(conn, :show, genre: genre)
+    case Genres.get_genre(id) do
+      {:ok, genre} ->
+        conn
+        |> put_status(:ok)
+        |> render(:show, genre: genre)
+
+      {:error, err} ->
+        conn
+        |> put_status(:not_found)
+        |> json(%{error: err})
+    end
   end
 end
