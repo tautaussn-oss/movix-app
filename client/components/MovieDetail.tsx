@@ -124,11 +124,20 @@ export function MovieDetail({
         )}
       </div>
 
-      {deleteError && <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">{deleteError}</p>}
-      
+      {deleteError && (
+        <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">
+          {deleteError}
+        </p>
+      )}
+
       <div className="relative w-full h-190 bg-[#141414]">
         <div className="absolute top-0 left-0 w-full h-1/2  ">
-          <Image src={movie.poster} alt={movie.title} fill className="object-cover blur-sm rounded-3xl overflow-hidden " />
+          <Image
+            src={movie.poster}
+            alt={movie.title}
+            fill
+            className="object-cover blur-sm rounded-3xl overflow-hidden "
+          />
           <div className="absolute top-0 left-0 w-full h-full scale-110  bg-linear-to-t from-[#141414] to-transparent" />
         </div>
         <div className="absolute left-0 top-60 w-full h-125 flex flex-col bg-[#141414] shadow-[4px_8px_20px_-3px_#AA7600] rounded-4xl">
@@ -179,7 +188,11 @@ export function MovieDetail({
           })}
         </div>
       </div>
-      {ratingError && <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">{ratingError}</p>}
+      {ratingError && (
+        <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">
+          {ratingError}
+        </p>
+      )}
       <button
         className="flex gap-3 items-center justify-center w-full md:max-w-1/3 py-2 px-3 rounded-xl text-[#aa7600] border border-[#aa7600] cursor-pointer"
         onClick={handleFavorites}

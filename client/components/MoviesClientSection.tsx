@@ -16,11 +16,14 @@ const SORTING_OPTIONS = ['title', 'year', 'rating'];
 export function MoviesClientSection({
   moviesList,
   genresList,
-}: { moviesList: Movie[] } & { genresList: Genre[] | null }) {
+  initialGenre,
+}: { moviesList: Movie[] } & { genresList: Genre[] | null } & { initialGenre?: string }) {
   const [movies, setMovies] = useState<Movie[] | null>(moviesList);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchText, setSearchText] = useState('');
-  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedGenres, setSelectedGenres] = useState<string[]>(
+    initialGenre ? [initialGenre] : [],
+  );
   const [featured, setFeatured] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState('');
   const [error, setError] = useState('');
@@ -74,7 +77,11 @@ export function MoviesClientSection({
       <SearchBar searchText={searchText} onSearch={handleSearch} onChange={handleTextChange} />
       <div className="flex flex-col gap-3  w-full md:w-1/2 lg:w-1/3">
         <p className="text-white font-bold">Genre</p>
-        <GenreMultiSelect genres={genresList} selected={selectedGenres} onSelect={handleGenreFilter} />
+        <GenreMultiSelect
+          genres={genresList}
+          selected={selectedGenres}
+          onSelect={handleGenreFilter}
+        />
         <p className="text-white font-bold">Sort by</p>
         <SelectBar placeholder="All" options={SORTING_OPTIONS} onSelect={handleSort} />
         <div className="flex flex-col w-full md:flex-row justify-center gap-3">

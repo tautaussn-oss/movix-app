@@ -47,7 +47,7 @@ export type FilterMoviesParams = {
   sortBy?: string;
 };
 export type GenreMultiSelectProp = {
-  genres: Genre[]|null;
+  genres: Genre[] | null;
   selected?: string[];
   onSelect: (value: string[]) => void;
 };

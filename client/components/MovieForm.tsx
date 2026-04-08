@@ -18,7 +18,7 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
   const [featured, setFeatured] = useState(movie?.featured ?? false);
   const [director, setDirector] = useState(movie?.director ?? '');
   const [error, setError] = useState('');
-  const router=useRouter();
+  const router = useRouter();
 
   useEffect(() => {
     if (!poster) {
@@ -54,12 +54,11 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
       try {
         const response = await editMovie(movie.id.toString(), formData);
         console.log(response);
-        router.push(`/movies/${movie.id}`)
-      } catch(e) {
-        if(e instanceof Error){
+        router.push(`/movies/${movie.id}`);
+      } catch (e) {
+        if (e instanceof Error) {
           setError(e.message);
-        }
-        else setError('Editing failed!');
+        } else setError('Editing failed!');
       }
     } else {
       try {
@@ -76,11 +75,10 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
         // setDirector('');
         // setPoster(null);
         // setFeatured(false);
-      } catch(e) {
-        if(e instanceof Error){
-          setError(e.message)
-        }
-        else setError('Creating movie failed!');
+      } catch (e) {
+        if (e instanceof Error) {
+          setError(e.message);
+        } else setError('Creating movie failed!');
       }
     }
   };
@@ -90,7 +88,11 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
       className="flex flex-col items-center md:w-1/2 lg:w-1/3 justify-center p-5 gap-5 md:p-10 border border-gray-700 rounded-xl bg-[#1f1f1f] text-gray-400"
       onSubmit={handleAddingMovie}
     >
-      {error && <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">{error}</p>}
+      {error && (
+        <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">
+          {error}
+        </p>
+      )}
       <div className="w-full flex flex-col gap-2">
         <label htmlFor="title" className="text-gray-400 text-lg">
           Movie Name
@@ -105,17 +107,17 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
         />
       </div>
       <div className="flex flex-col gap-2 w-full">
-          <label htmlFor="director" className="text-gray-400 text-lg">
-            Director
-          </label>
-          <input
-            type="text"
-            id="director"
-            value={director}
-            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl overflow-hidden"
-            onChange={(e) => setDirector(e.target.value)}
-          />
-        </div>
+        <label htmlFor="director" className="text-gray-400 text-lg">
+          Director
+        </label>
+        <input
+          type="text"
+          id="director"
+          value={director}
+          className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl overflow-hidden"
+          onChange={(e) => setDirector(e.target.value)}
+        />
+      </div>
       <div className="flex gap-2 w-full">
         <div className="flex flex-col gap-2 w-1/2">
           <label htmlFor="duration" className="text-gray-400 text-lg">
@@ -134,14 +136,14 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
             Year
           </label>
           <input
-          type="number"
-          id='year'
-          value={year}
-          required
-          className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl  overflow-hidden"
-          onChange={(e) => setYear(e.target.value)}
-        />
-      </div>
+            type="number"
+            id="year"
+            value={year}
+            required
+            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl  overflow-hidden"
+            onChange={(e) => setYear(e.target.value)}
+          />
+        </div>
       </div>
       <div className="flex flex-col gap-2 w-full">
         <label className="text-gray-400 text-lg">Genre</label>

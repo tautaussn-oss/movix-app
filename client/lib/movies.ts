@@ -56,7 +56,7 @@ export async function getDirectors(): Promise<Director[] | null> {
 }
 export async function getPrevNextMovie(id: string, option: string): Promise<number | null> {
   const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}/${option}`);
-  if(response.status===404) return null;
+  if (response.status === 404) return null;
   if (!response.ok) throw new Error('No prev/next');
   const newId = await response.json();
   return newId ? newId.id : null;

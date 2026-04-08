@@ -1,8 +1,9 @@
+import { Footer } from '@/components/Footer';
 import { MoviesViewSwitch } from '@/components/MoviesViewSwitch';
 import { StatusMessage } from '@/components/StatusMessage';
 import { getData, getFilteredMovies } from '@/lib/movies';
+import { GenreCard } from '@/components/GenreCard';
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default async function Home() {
   let movies, featured, popular, genres;
@@ -33,6 +34,15 @@ export default async function Home() {
         </div>
       </div>
       <MoviesViewSwitch movies={movies} featured={featured} popular={popular} />
+      <h1 className="text-white text-2xl text-center w-70.5 my-5">
+        Explore our vide variety of <span className="text-[#aa7600]">categories</span>
+      </h1>
+      <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-5 items-center justify-center lg:grid-cols-3">
+        {genres?.map((genre) => {
+          return <GenreCard key={genre.id} genre={genre} />;
+        })}
+      </div>
+      <Footer />
     </main>
   );
 }

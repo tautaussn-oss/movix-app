@@ -1,3 +1,4 @@
+import { Footer } from '@/components/Footer';
 import { MovieForm } from '@/components/MovieForm';
 import { StatusMessage } from '@/components/StatusMessage';
 import { getData, getMovieByID } from '@/lib/movies';
@@ -18,8 +19,9 @@ export default async function EditMovie({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="w-full h-full p-5 flex justify-center">
+    <div className="w-full h-full p-5 flex flex-col items-center justify-center">
       <MovieForm movie={movie} genres={genres} />
+      <Footer />
     </div>
   );
 }
