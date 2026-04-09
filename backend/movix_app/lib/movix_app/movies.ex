@@ -169,30 +169,29 @@ defmodule MovixApp.Movies do
   end
 
   def get_related_movies(id) do
-    try do
-      with Movie <- Repo.get(Movie, id),
-           genre_ids <-
-             from(g in "movies_genres",
-               where: g.movie_id == ^id,
-               select: g.genre_id
-             )
-             |> Repo.all(),
-           related <-
-             from(m in Movie,
-               join: g in assoc(m, :genres),
-               where: g.id in ^genre_ids and m.id != ^id,
-               group_by: m.id,
-               order_by: [desc: count(g.id)],
-               limit: 6,
-               preload: [:genres, :director]
-             )
-             |> Repo.all() do
+    case get_movie(id) do
+      {:error, :invalid_id} ->
+        {:error, :invalid_id}
+
+      {:error, :not_found} ->
+        {:error, :not_found}
+
+      {:ok, movie} ->
+        genre_ids = Enum.map(movie.genres, fn genre -> genre.id end)
+
+        related =
+          from(m in Movie,
+            join: g in assoc(m, :genres),
+            where: g.id in ^genre_ids and m.id != ^movie.id,
+            group_by: m.id,
+            order_by: [desc: count(g.id)],
+            limit: 6,
+            preload: [:genres]
+          )
+          |> preload(:director)
+          |> Repo.all()
+
         {:ok, related}
-      else
-        nil -> {:error, :not_found}
-      end
-    rescue
-      _e in Ecto.Query.CastError -> {:error, :invalid_id}
     end
   end
 end
