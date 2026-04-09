@@ -4,7 +4,7 @@ defmodule MovixApp.MoviesHelper do
   alias MovixApp.Repo
   import Ecto.Query
 
-  defp get_director_by_full_name(full_name) do
+  def get_director_by_full_name(full_name) do
     [name, surname] = String.split(full_name, " ")
 
     case Repo.get_by(Director, name: name, surname: surname) do
@@ -23,7 +23,7 @@ defmodule MovixApp.MoviesHelper do
     end
   end
 
-  defp get_genres_by_names(names) do
+  def get_genres_by_names(names) do
     Repo.all(from(g in Genre, where: g.name in ^names))
   end
 

@@ -2,8 +2,6 @@ defmodule MovixApp.MoviesTest do
   use MovixApp.DataCase
 
   import MovixApp.Fixtures
-  alias MovixApp.Genres.Genre
-  alias MovixApp.Directors.Director
   alias MovixApp.Movies.Movie
   alias MovixApp.Repo
   alias MovixApp.Movies

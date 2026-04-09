@@ -21,7 +21,7 @@ defmodule MovixAppWeb.Router do
     get("/movies/:id", MoviesController, :show)
     get("/genres", GenresController, :index)
     get("/genres/:id", GenresController, :show)
-    get("/directors", MoviesController, :directors)
+    get("/directors", DirectorsController, :directors)
     get("/movies/:id/next", MoviesController, :next)
     get("/movies/:id/prev", MoviesController, :prev)
     get("/movies/:id/related", MoviesController, :related_movies)

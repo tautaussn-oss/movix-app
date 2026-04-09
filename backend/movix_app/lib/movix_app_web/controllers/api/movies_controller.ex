@@ -2,11 +2,9 @@ defmodule MovixAppWeb.Api.MoviesController do
   use MovixAppWeb, :controller
 
   alias MovixApp.Movies
-  alias MovixApp.Directors
   alias MovixApp.CloudinaryHelper
 
   def index(conn, params) do
-    # IO.inspect(params, label: "PARAMS")
     movies = Movies.filter_movies(params)
     render(conn, :index, movies: movies)
   end
@@ -26,8 +24,6 @@ defmodule MovixAppWeb.Api.MoviesController do
   end
 
   def create(conn, params) do
-    # IO.inspect(params, label: "PARAMS")
-
     with {:ok, %{url: poster_url, public_id: public_id}} <-
            CloudinaryHelper.upload_to_cloudinary(params["poster"]),
          attrs <-
@@ -97,11 +93,6 @@ defmodule MovixAppWeb.Api.MoviesController do
       {:ok, movie} -> conn |> put_status(:ok) |> render(:show_id, movie: movie)
       {:error, err} -> conn |> put_status(:not_found) |> json(%{error: err})
     end
-  end
-
-  def directors(conn, _params) do
-    directors = Directors.list_directors()
-    render(conn, :show_directors, directors: directors)
   end
 
   def related_movies(conn, %{"id" => id}) do

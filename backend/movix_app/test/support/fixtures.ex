@@ -30,7 +30,7 @@ defmodule MovixApp.Fixtures do
         public_id_cloudinary: "pid",
         director_id: director.id
       }
-      |> Map.merge(Map.drop(attrs, [:genres, :ratings]))
+      |> Map.merge(Map.drop(attrs, [:genres]))
 
     movie =
       %Movie{}
@@ -45,7 +45,7 @@ defmodule MovixApp.Fixtures do
 
     # preload = CRITICAL
     Repo.get!(Movie, movie.id)
-    |> Repo.preload([:genres, :director, :ratings])
+    |> Repo.preload([:genres, :director])
   end
 
   def movies_fixture(count \\ 10, attrs \\ %{}) do

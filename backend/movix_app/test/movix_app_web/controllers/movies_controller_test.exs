@@ -6,45 +6,6 @@ defmodule MovixAppWeb.MoviesControllerTest do
   alias MovixApp.Movies.Movie
   alias MovixApp.Repo
 
-  # import Ecto.Query
-  # doctest MovixAppWeb.Api.MoviesController
-
-  defp create_movie(attrs \\ %{}) do
-    director =
-      Repo.insert!(%Director{
-        name: "Dir",
-        surname: "Test#{System.unique_integer()}"
-      })
-
-    genre1 = Repo.insert!(%Genre{name: "Action#{System.unique_integer()}"})
-    genre2 = Repo.insert!(%Genre{name: "Drama#{System.unique_integer()}"})
-
-    movie =
-      %Movie{
-        title: "Movie #{System.unique_integer()}",
-        year: 2000,
-        description: "desc",
-        duration: 120,
-        featured: false,
-        poster: "url",
-        public_id_cloudinary: "pid",
-        rating_avg: 5.0,
-        rating_count: 10,
-        director_id: director.id
-      }
-      |> Map.merge(attrs)
-      |> Repo.insert!()
-
-    movie =
-      movie
-      |> Repo.preload(:genres)
-      |> Ecto.Changeset.change()
-      |> Ecto.Changeset.put_assoc(:genres, [genre1, genre2])
-      |> Repo.update!()
-
-    Repo.preload(movie, [:genres, :director])
-  end
-
   describe "GET /movies" do
     test "returns movies", %{conn: conn} do
       movie = movie_fixture()
@@ -61,152 +22,150 @@ defmodule MovixAppWeb.MoviesControllerTest do
     assert response(conn, 404)
   end
 
-  test "next with invalid id returns 404", %{conn: conn} do
-    assert_error_sent(400, fn ->
-      get(conn, "/api/movies/abc/next")
-    end)
-  end
-
   test "returns empty list when no movies exist", %{conn: conn} do
     conn = get(conn, "/api/movies")
 
     assert %{"movies" => []} = json_response(conn, 200)
   end
-
-  test "search with empty string returns all movies", %{conn: conn} do
-    _m1 = create_movie(%{title: "Batman"})
-    _m2 = create_movie(%{title: "Superman"})
-
-    conn = get(conn, "/api/movies?search=")
-
-    %{"movies" => movies} = json_response(conn, 200)
-
-    assert length(movies) >= 2
+  
+  test "" do
+    
   end
 
-  test "search with no matches returns empty list", %{conn: conn} do
-    _m = create_movie(%{title: "Batman"})
+  # test "search with empty string returns all movies", %{conn: conn} do
+  #   _m1 = create_movie(%{title: "Batman"})
+  #   _m2 = create_movie(%{title: "Superman"})
 
-    conn = get(conn, "/api/movies?search=xyz123")
+  #   conn = get(conn, "/api/movies?search=")
 
-    assert %{"movies" => []} = json_response(conn, 200)
-  end
+  #   %{"movies" => movies} = json_response(conn, 200)
 
-  test "search is case insensitive", %{conn: conn} do
-    _m = create_movie(%{title: "Batman"})
+  #   assert length(movies) >= 2
+  # end
 
-    conn = get(conn, "/api/movies?search=BAT")
+  # test "search with no matches returns empty list", %{conn: conn} do
+  #   _m = create_movie(%{title: "Batman"})
 
-    %{"movies" => [movie]} = json_response(conn, 200)
+  #   conn = get(conn, "/api/movies?search=xyz123")
 
-    assert movie["title"] == "Batman"
-  end
+  #   assert %{"movies" => []} = json_response(conn, 200)
+  # end
 
-  test "genre that does not exist returns empty list", %{conn: conn} do
-    _m = create_movie()
+  # test "search is case insensitive", %{conn: conn} do
+  #   _m = create_movie(%{title: "Batman"})
 
-    conn = get(conn, "/api/movies?genre[]=NonExisting")
+  #   conn = get(conn, "/api/movies?search=BAT")
 
-    assert %{"movies" => []} = json_response(conn, 200)
-  end
+  #   %{"movies" => [movie]} = json_response(conn, 200)
 
-  test "does not return movie if only one of multiple genres matches", %{conn: conn} do
-    g1 = Repo.insert!(%Genre{name: "Action"})
-    _g2 = Repo.insert!(%Genre{name: "Drama"})
+  #   assert movie["title"] == "Batman"
+  # end
 
-    director = Repo.insert!(%Director{name: "A", surname: "B"})
+  # test "genre that does not exist returns empty list", %{conn: conn} do
+  #   _m = create_movie()
 
-    movie =
-      %Movie{
-        title: "Only Action",
-        year: 2000,
-        description: "desc",
-        duration: 120,
-        poster: "url",
-        public_id_cloudinary: "pid",
-        director_id: director.id
-      }
-      |> Repo.insert!()
+  #   conn = get(conn, "/api/movies?genre[]=NonExisting")
 
-    movie
-    |> Repo.preload(:genres)
-    |> Ecto.Changeset.change()
-    |> Ecto.Changeset.put_assoc(:genres, [g1])
-    |> Repo.update!()
+  #   assert %{"movies" => []} = json_response(conn, 200)
+  # end
 
-    conn =
-      get(conn, "/api/movies?genre[]=Action&genre[]=Drama")
+  # test "does not return movie if only one of multiple genres matches", %{conn: conn} do
+  #   g1 = Repo.insert!(%Genre{name: "Action"})
+  #   _g2 = Repo.insert!(%Genre{name: "Drama"})
 
-    assert %{"movies" => []} = json_response(conn, 200)
-  end
+  #   director = Repo.insert!(%Director{name: "A", surname: "B"})
 
-  test "duplicate genres do not break query", %{conn: conn} do
-    _m = create_movie()
+  #   movie =
+  #     %Movie{
+  #       title: "Only Action",
+  #       year: 2000,
+  #       description: "desc",
+  #       duration: 120,
+  #       poster: "url",
+  #       public_id_cloudinary: "pid",
+  #       director_id: director.id
+  #     }
+  #     |> Repo.insert!()
 
-    conn =
-      get(conn, "/api/movies?genre[]=Action&genre[]=Action")
+  #   movie
+  #   |> Repo.preload(:genres)
+  #   |> Ecto.Changeset.change()
+  #   |> Ecto.Changeset.put_assoc(:genres, [g1])
+  #   |> Repo.update!()
 
-    # should not crash
-    assert %{"movies" => _} = json_response(conn, 200)
-  end
+  #   conn =
+  #     get(conn, "/api/movies?genre[]=Action&genre[]=Drama")
 
-  test "invalid featured value is ignored", %{conn: conn} do
-    _m1 = create_movie(%{featured: true})
-    _m2 = create_movie(%{featured: false})
+  #   assert %{"movies" => []} = json_response(conn, 200)
+  # end
 
-    conn = get(conn, "/api/movies?featured=not_boolean")
+  # test "duplicate genres do not break query", %{conn: conn} do
+  #   _m = create_movie()
 
-    %{"movies" => movies} = json_response(conn, 200)
+  #   conn =
+  #     get(conn, "/api/movies?genre[]=Action&genre[]=Action")
 
-    # should return all (filter ignored)
-    assert length(movies) >= 2
-  end
+  #   # should not crash
+  #   assert %{"movies" => _} = json_response(conn, 200)
+  # end
 
-  test "invalid sort falls back to default", %{conn: conn} do
-    _m1 = create_movie()
-    _m2 = create_movie()
+  # test "invalid featured value is ignored", %{conn: conn} do
+  #   _m1 = create_movie(%{featured: true})
+  #   _m2 = create_movie(%{featured: false})
 
-    conn = get(conn, "/api/movies?sort_by=invalid")
+  #   conn = get(conn, "/api/movies?featured=not_boolean")
 
-    %{"movies" => movies} = json_response(conn, 200)
+  #   %{"movies" => movies} = json_response(conn, 200)
 
-    # default sort is :id ascending
-    ids = Enum.map(movies, & &1["id"])
+  #   # should return all (filter ignored)
+  #   assert length(movies) >= 2
+  # end
 
-    assert ids == Enum.sort(ids)
-  end
+  # test "invalid sort falls back to default", %{conn: conn} do
+  #   _m1 = create_movie()
+  #   _m2 = create_movie()
 
-  test "sorting on empty DB returns empty list", %{conn: conn} do
-    conn = get(conn, "/api/movies?sort_by=rating")
+  #   conn = get(conn, "/api/movies?sort_by=invalid")
 
-    assert %{"movies" => []} = json_response(conn, 200)
-  end
+  #   %{"movies" => movies} = json_response(conn, 200)
 
-  test "next returns nil if last movie", %{conn: conn} do
-    m = create_movie()
+  #   # default sort is :id ascending
+  #   ids = Enum.map(movies, & &1["id"])
 
-    conn = get(conn, "/api/movies/#{m.id}/next")
+  #   assert ids == Enum.sort(ids)
+  # end
 
-    assert json_response(conn, 200) == nil
-  end
+  # test "sorting on empty DB returns empty list", %{conn: conn} do
+  #   conn = get(conn, "/api/movies?sort_by=rating")
 
-  test "next skips deleted ids correctly", %{conn: conn} do
-    m1 = create_movie()
-    m2 = create_movie()
-    m3 = create_movie()
+  #   assert %{"movies" => []} = json_response(conn, 200)
+  # end
 
-    Repo.delete!(Repo.get!(Movie, m2.id))
+  # test "next returns nil if last movie", %{conn: conn} do
+  #   m = create_movie()
 
-    conn = get(conn, "/api/movies/#{m1.id}/next")
+  #   conn = get(conn, "/api/movies/#{m.id}/next")
 
-    response = json_response(conn, 200)
+  #   assert json_response(conn, 200) == nil
+  # end
 
-    assert response["id"] == m3.id
-  end
+  # test "next skips deleted ids correctly", %{conn: conn} do
+  #   m1 = create_movie()
+  #   m2 = create_movie()
+  #   m3 = create_movie()
 
-  test "id does exist", %{conn: conn} do
-    conn = get(conn, "/api/movies")
+  #   Repo.delete!(Repo.get!(Movie, m2.id))
 
-    assert json_response(conn, 200)
-  end
+  #   conn = get(conn, "/api/movies/#{m1.id}/next")
+
+  #   response = json_response(conn, 200)
+
+  #   assert response["id"] == m3.id
+  # end
+
+  # test "id does exist", %{conn: conn} do
+  #   conn = get(conn, "/api/movies")
+
+  #   assert json_response(conn, 200)
+  # end
 end

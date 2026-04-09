@@ -1,6 +1,5 @@
 defmodule MovixApp.Ratings do
   alias MovixApp.Repo
-  # alias MovixApp.Ratings.Rating
   alias MovixApp.Movies.Movie
 
   import Ecto.Query
