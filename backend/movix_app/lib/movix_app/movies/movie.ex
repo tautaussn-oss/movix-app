@@ -38,7 +38,6 @@ defmodule MovixApp.Movies.Movie do
       :year,
       :duration,
       :poster,
-      :public_id_cloudinary,
       :featured,
       :director_id
     ])
@@ -48,7 +47,6 @@ defmodule MovixApp.Movies.Movie do
       :year,
       :duration,
       :poster,
-      :public_id_cloudinary,
       :featured,
       :director_id
     ])

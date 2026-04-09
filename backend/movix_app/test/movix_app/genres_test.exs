@@ -3,6 +3,18 @@ defmodule MovixApp.GenresTest do
 
   import MovixApp.Fixtures
   alias MovixApp.Genres
+  alias MovixApp.Genres.Genre
+
+  describe "unique constraint" do
+    test "no possible to insert duplicates" do
+      Repo.insert!(%Genre{name: "Acton"})
+
+      assert {:error, changeset} =
+               Genre
+               |> Genre.changeset(%{name: "Action"})
+               |> Repo.insert()
+    end
+  end
 
   describe "list_all/0" do
     test "returns all genres" do
