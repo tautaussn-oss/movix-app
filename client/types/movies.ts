@@ -24,6 +24,7 @@ export type SelectBarProp = {
 };
 
 export type SwitchProp = {
+  id: string;
   label: string;
   checked: boolean;
   onChange: (value: boolean) => void;
@@ -60,6 +61,22 @@ export type CreatePageProps = {
   directors: Director[] | null;
 };
 export type MovieFormProps = {
-  movie?: Movie | undefined;
+  movie?: Movie;
   genres: Genre[] | null;
+};
+export type MovieDetailProp = {
+  movie: Movie;
+  prevMovie: number | null;
+  nextMovie: number | null;
+  relatedMovies: Movie[] | null;
+};
+export type MovieClientSectionProp = {
+  moviesList: Movie[];
+  genresList: Genre[] | null;
+  initialGenre?: string;
+};
+export type MoviesViewSwitchProp = {
+  movies: Movie[] | null;
+  featured: Movie[] | null;
+  popular: Movie[] | null;
 };

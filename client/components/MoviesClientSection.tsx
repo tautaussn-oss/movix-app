@@ -1,5 +1,5 @@
 'use client';
-import { Movie, Genre } from '@/types/movies';
+import { Movie, MovieClientSectionProp } from '@/types/movies';
 
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/SearchBar';
@@ -17,7 +17,7 @@ export function MoviesClientSection({
   moviesList,
   genresList,
   initialGenre,
-}: { moviesList: Movie[] } & { genresList: Genre[] | null } & { initialGenre?: string }) {
+}: MovieClientSectionProp) {
   const [movies, setMovies] = useState<Movie[] | null>(moviesList);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchText, setSearchText] = useState('');
@@ -83,7 +83,12 @@ export function MoviesClientSection({
           onSelect={handleGenreFilter}
         />
         <p className="text-white font-bold">Sort by</p>
-        <SelectBar placeholder="All" options={SORTING_OPTIONS} onSelect={handleSort} />
+        <SelectBar
+          placeholder="All"
+          selected={sortBy}
+          options={SORTING_OPTIONS}
+          onSelect={handleSort}
+        />
         <div className="flex flex-col w-full md:flex-row justify-center gap-3">
           <button
             className="text-black text-center bg-[#c08600] rounded-lg md:w-1/2 px-3 py-1"
@@ -98,7 +103,12 @@ export function MoviesClientSection({
             Add Movie <span className="font-bold text-lg">+</span>
           </Link>
         </div>
-        <Switch label="Show Featured Movies Only" checked={featured} onChange={handleFeatured} />
+        <Switch
+          id="mcswitch"
+          label="Show Featured Movies Only"
+          checked={featured}
+          onChange={handleFeatured}
+        />
       </div>
       {movies === null || movies.length === 0 ? (
         <StatusMessage type="empty" message="No movies found!" />

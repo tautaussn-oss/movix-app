@@ -1,18 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Movie } from '@/types/movies';
+import { MoviesViewSwitchProp } from '@/types/movies';
 import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
 import { Favorites } from './Favorites';
 
 const SHOW_OPTIONS = ['Featured', 'Popular', 'Favorites'] as const;
 
-export function MoviesViewSwitch({
-  movies,
-  featured,
-  popular,
-}: { movies: Movie[] | null } & { featured: Movie[] | null } & { popular: Movie[] | null }) {
+export function MoviesViewSwitch({ movies, featured, popular }: MoviesViewSwitchProp) {
   const [selected, setSelected] = useState('Featured');
 
   return (

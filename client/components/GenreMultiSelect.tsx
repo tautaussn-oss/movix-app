@@ -23,14 +23,17 @@ export function GenreMultiSelect({ genres, selected, onSelect }: GenreMultiSelec
     <div
       className={`bg-amber-100 flex flex-col max-h-25 overflow-y-scroll rounded-lg w-full text-black px-3 py-2`}
     >
-      <p className="flex justify-center gap-1 items-center" onClick={() => setIsActive(!isActive)}>
-        <span>All</span>
+      <button
+        className="flex justify-center gap-1 items-center"
+        onClick={() => setIsActive(!isActive)}
+      >
+        <span>Choose genres:</span>
         {isActive ? (
           <MdOutlineKeyboardArrowUp className="font-bold" />
         ) : (
           <MdOutlineKeyboardArrowDown />
         )}
-      </p>
+      </button>
       <div className="flex flex-col gap-1">
         {isActive &&
           genres.map(({ id, genre }) => {

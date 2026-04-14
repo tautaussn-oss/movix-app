@@ -16,10 +16,7 @@ export default async function Home() {
     ]);
   } catch {
     return (
-      <StatusMessage
-        type="error"
-        message={'Something went wrong while loading filterded movies!'}
-      />
+      <StatusMessage type="error" message={'Something went wrong while loading filtered movies!'} />
     );
   }
 
@@ -35,7 +32,7 @@ export default async function Home() {
       </div>
       <MoviesViewSwitch movies={movies} featured={featured} popular={popular} />
       <h1 className="text-white text-2xl text-center w-70.5 my-5">
-        Explore our vide variety of <span className="text-[#aa7600]">categories</span>
+        Explore our wide variety of <span className="text-[#aa7600]">categories</span>
       </h1>
       <div className="p-10 grid grid-cols-1 md:grid-cols-2 gap-5 items-center justify-center lg:grid-cols-3">
         {genres?.map((genre) => {

@@ -76,3 +76,20 @@ export async function editMovie(id: string, data: FormData) {
   if (!response.ok) throw new Error('Failed to edit Movie!');
   return response;
 }
+export async function deleteMovie(id: string): Promise<void> {
+  const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) throw new Error('Failed to delete movie');
+}
+export async function rateMovie(id: string, rating: number): Promise<void> {
+  const response = await fetch(`https://movix-app-az3n.onrender.com/api/ratings/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ rating }),
+  });
+  if (!response.ok) throw new Error('Failed to save Rating!');
+}

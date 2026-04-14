@@ -15,7 +15,7 @@ export default async function EditMovie({ params }: { params: Promise<{ id: stri
   }
 
   if (movie === null) {
-    return <StatusMessage type="error" message="Movie not found" />;
+    return <StatusMessage type="empty" message="Movie not found" />;
   }
 
   return (

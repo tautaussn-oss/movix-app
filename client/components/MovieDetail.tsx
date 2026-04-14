@@ -1,5 +1,5 @@
 'use client';
-import { Movie } from '@/types/movies';
+import { MovieDetailProp } from '@/types/movies';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,20 +14,11 @@ import { MdStar } from 'react-icons/md';
 import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
 import { addFavorite, isFavorite, removeFavorite } from '@/lib/localStorage';
+import { deleteMovie, rateMovie } from '@/lib/movies';
 
 const rateButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
-export function MovieDetail({
-  movie,
-  prevMovie,
-  nextMovie,
-  relatedMovies,
-}: {
-  movie: Movie;
-  prevMovie: number | null;
-  nextMovie: number | null;
-  relatedMovies: Movie[] | null;
-}) {
+export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: MovieDetailProp) {
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [isFavoriteMovie, setIsFavoriteMovie] = useState(false);
@@ -41,14 +32,7 @@ export function MovieDetail({
   const handleDelete = async (id: number) => {
     setDeleteError('');
     try {
-      const response = await fetch(`https://movix-app-az3n.onrender.com/api/movies/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete movie');
-      }
-
+      await deleteMovie(id.toString());
       router.push('/movies');
     } catch (error) {
       if (error instanceof Error) {
@@ -67,14 +51,7 @@ export function MovieDetail({
   const handleRating = async (rating: number) => {
     setRatingError('');
     try {
-      const response = await fetch(`https://movix-app-az3n.onrender.com/api/ratings/${movie.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rating }),
-      });
-      if (!response.ok) throw new Error('Failed to save Rating!');
+      await rateMovie(movie.id.toString(), rating);
       setRating(rating);
       router.refresh();
     } catch (error) {
@@ -98,7 +75,7 @@ export function MovieDetail({
         ) : (
           <button
             disabled
-            className=" bg-[#f4f4f5] text-[#AA7600] border border-[#AA7600] hover:bg-amber-100 whitespace-nowrap w-1/2 md:max-w-1/3 rounded-xl py-2 px-3 flex gap-3 items-center justify-center"
+            className=" bg-[#f4f4f5] text-[#AA7600] border border-[#AA7600] whitespace-nowrap w-1/2 md:max-w-1/3 rounded-xl py-2 px-3 flex gap-3 items-center justify-center"
           >
             <MdArrowBackIosNew />
             Previous Movie

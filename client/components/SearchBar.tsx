@@ -11,6 +11,7 @@ export function SearchBar({ searchText, onSearch, onChange }: SearchBarProp) {
         className="px-3 py-2 w-full rounded-lg bg-gray-200"
       />
       <button
+        type="button"
         className="bg-[#c08600] text-white rounded-lg px-3 py-2 hover:bg-[#aa7600] "
         onClick={() => onSearch(searchText)}
       >

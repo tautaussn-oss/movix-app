@@ -52,8 +52,7 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
 
     if (movie) {
       try {
-        const response = await editMovie(movie.id.toString(), formData);
-        console.log(response);
+        await editMovie(movie.id.toString(), formData);
         router.push(`/movies/${movie.id}`);
       } catch (e) {
         if (e instanceof Error) {
@@ -62,19 +61,8 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
       }
     } else {
       try {
-        const response = await createMovie(formData);
-        console.log(response);
+        await createMovie(formData);
         router.push('/movies');
-
-        // setPosterPreview('');
-        // setMovieName('');
-        // setYear('');
-        // setGenreArr([]);
-        // setDescription('');
-        // setDuration('');
-        // setDirector('');
-        // setPoster(null);
-        // setFeatured(false);
       } catch (e) {
         if (e instanceof Error) {
           setError(e.message);
@@ -186,7 +174,12 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
           required
           onChange={(e) => setDescription(e.target.value)}
         />
-        <Switch label="Featured Movie" checked={featured} onChange={handleFeatured} />
+        <Switch
+          id="formswitch"
+          label="Featured Movie"
+          checked={featured}
+          onChange={handleFeatured}
+        />
         <button
           type="submit"
           className="rounded-full px-3 py-2 bg-[#aa7600] hover:bg-[#996a00] text-white font-bold"
