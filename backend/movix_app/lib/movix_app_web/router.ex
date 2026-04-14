@@ -29,6 +29,8 @@ defmodule MovixAppWeb.Router do
     put("/ratings/:id", RatingsController, :create)
     put("/movies/:id", MoviesController, :update)
     delete("/movies/:id", MoviesController, :delete)
+
+    get("/ping", MoviesController, :ping)
   end
 
   scope "/", MovixAppWeb do

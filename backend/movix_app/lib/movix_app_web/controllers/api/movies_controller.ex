@@ -99,4 +99,8 @@ defmodule MovixAppWeb.Api.MoviesController do
     {:ok, related_movies} = Movies.get_related_movies(id)
     render(conn, :index, movies: related_movies)
   end
+
+  def ping(conn, _params) do
+    json(conn, %{ok: true})
+  end
 end
