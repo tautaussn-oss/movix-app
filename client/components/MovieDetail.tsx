@@ -15,6 +15,17 @@ import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
 import { addFavorite, isFavorite, removeFavorite } from '@/lib/localStorage';
 import { deleteMovie, rateMovie } from '@/lib/movies';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const rateButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
@@ -188,12 +199,35 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
         Edit this Movie
         <FaEdit />
       </Link>
-      <button
+      {/* <button
         className="py-2 px-3 w-1/2 md:max-w-1/4 lg:max-w-1/6 border border-[#aa7600] rounded-xl bg-red-500 hover:bg-red-600 cursor-pointer text-white"
         onClick={() => handleDelete(movie.id)}
       >
         Delete this Movie
-      </button>
+      </button> */}
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <button className="py-2 px-3 w-1/2 md:max-w-1/4 lg:max-w-1/6 border border-[#aa7600] rounded-xl bg-red-500 hover:bg-red-600 cursor-pointer text-white">
+            Delete this Movie
+          </button>
+        </AlertDialogTrigger>
+
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this movie.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction className="bg-red-500" onClick={() => handleDelete(movie.id)}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <div className="w-full flex flex-col">
         <h1 className="w-full border-b border-[#aa7600] text-[#aa7600] font-semibold text-2xl p-5">
           Related Movies
