@@ -7,11 +7,11 @@ defmodule MovixApp.GenresTest do
 
   describe "unique constraint" do
     test "no possible to insert duplicates" do
-      Repo.insert!(%Genre{name: "Acton"})
+      genre_fixture("Comedy")
 
       assert {:error, changeset} =
-               Genre
-               |> Genre.changeset(%{name: "Action"})
+               %Genre{}
+               |> Genre.changeset(%{name: "Comedy"})
                |> Repo.insert()
     end
   end

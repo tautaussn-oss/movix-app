@@ -3,6 +3,7 @@ defmodule MovixApp.MoviesTest do
 
   import MovixApp.Fixtures
   alias MovixApp.Movies.Movie
+  alias MovixApp.Directors
   alias MovixApp.Repo
   alias MovixApp.Movies
 
@@ -30,7 +31,7 @@ defmodule MovixApp.MoviesTest do
       director1 = director_fixture()
       director2 = director_fixture()
 
-      directors = Movies.list_directors()
+      directors = Directors.list_directors()
 
       assert length(directors) == 2
       assert Enum.all?(directors, fn d -> d.name == "Quentin" and d.surname == "Tarantino" end)

@@ -9,7 +9,7 @@ defmodule MovixApp.RatingsTest do
   describe "assoc constraint" do
     test "fails when movie does not exist" do
       assert {:error, changeset} =
-               Rating
+               %Rating{}
                |> Rating.changeset(%{rating: 5, movie_id: -1})
                |> Repo.insert()
     end

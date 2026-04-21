@@ -27,9 +27,8 @@ defmodule MovixAppWeb.MoviesControllerTest do
 
     assert %{"movies" => []} = json_response(conn, 200)
   end
-  
+
   test "" do
-    
   end
 
   # test "search with empty string returns all movies", %{conn: conn} do

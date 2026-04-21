@@ -22,6 +22,6 @@ defmodule MovixApp.Genres.Genre do
     |> validate_required([
       :name
     ])
-    |> unique_constraint(:name)
+    |> unique_constraint(:name, name: :genres_genre_index)
   end
 end

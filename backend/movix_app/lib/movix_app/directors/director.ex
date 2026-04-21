@@ -22,7 +22,11 @@ defmodule MovixApp.Directors.Director do
       :name,
       :surname
     ])
-    |> validate_length(:name, max: 255)
-    |> validate_length(:surname, max: 255)
+    |> validate_length(:name, min: 2, max: 50)
+    |> validate_length(:surname, min: 2, max: 50)
+    # regex to accept any language and names like De Niro or Jan-Cloide
+    |> validate_format(:name, ~r/^[\p{L}]+([ '-][\p{L}]+)*$/u)
+    |> validate_format(:surname, ~r/^[\p{L}]+([ '-][\p{L}]+)*$/u)
+    |> validate_exclusion(:name, ["admin", "null", "undefined"])
   end
 end
