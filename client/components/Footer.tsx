@@ -19,7 +19,7 @@ const bottomLinks = ['About Us', 'Privacy Policy', 'Help', 'Conditions of Use', 
 export function Footer() {
   return (
     <footer className="w-full bg-[#141414] text-white border-t border-gray-700 mt-10">
-      <div className="max-w-md mx-auto px-6 py-10 flex flex-col items-center gap-8">
+      <div className="mx-auto px-6 py-10 flex flex-col items-center gap-8">
         <div className="flex flex-col items-center gap-6 w-full">
           <h2 className="text-3xl font-bold tracking-wide">STORE</h2>
 
@@ -53,7 +53,7 @@ export function Footer() {
             <button
               key={section}
               type="button"
-              className="w-full flex items-center justify-between py-5 border-b border-gray-700 text-left font-bold text-2xl"
+              className="w-full flex items-center justify-between py-5 border-b border-gray-700 text-left font-bold text-xl"
             >
               <span>{section}</span>
               <GoPlus className="text-3xl shrink-0" />
@@ -74,7 +74,7 @@ export function Footer() {
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-2 rounded-lg border border-[#e5c46b] bg-[#aa7600] px-8 py-3 text-3xl text-white hover:bg-[#996a00] transition"
+          className="flex items-center gap-2 rounded-lg border border-[#e5c46b] bg-[#aa7600] px-5 py-3 text-xl text-white hover:bg-[#996a00] transition"
         >
           <span>Back to top</span>
           <MdKeyboardArrowUp />

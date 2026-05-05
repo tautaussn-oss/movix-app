@@ -1,12 +1,13 @@
 import { SearchBarProp } from '@/types/movies';
+import { Input } from './ui/input';
 
 export function SearchBar({ searchText, onSearch, onChange }: SearchBarProp) {
   return (
     <div className="w-full md:w-1/2 lg:w-1/3 flex gap-3">
-      <input
+      <Input
+        placeholder="Search for movies"
         type="text"
         value={searchText}
-        placeholder="Search for Movies"
         onChange={(e) => onChange(e.target.value)}
         className="px-3 py-2 w-full rounded-lg bg-gray-200"
       />

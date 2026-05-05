@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Button } from './ui/button';
 
 const rateButtons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 
@@ -76,17 +77,22 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
     <div className="flex flex-col gap-5 w-full items-center p-5">
       <div className="w-full flex justify-between gap-3">
         {prevMovie ? (
-          <Link
-            href={`/movies/${prevMovie}`}
-            className=" bg-[#141414] text-[#AA7600] border border-[#AA7600] hover:bg-amber-100 whitespace-nowrap w-1/2 md:max-w-1/3 rounded-xl py-2 px-3 flex gap-3 items-center justify-center"
-          >
-            <MdArrowBackIosNew />
-            Previous Movie
-          </Link>
+          <div className="w-1/2 md:w-1/3">
+            <Button
+              asChild
+              variant={'outline'}
+              className="w-full border border-[#aa7600] bg-[#141414] text-[#aa7600]"
+            >
+              <Link href={`/movies/${prevMovie}`}>
+                <MdArrowBackIosNew />
+                Previous Movie
+              </Link>
+            </Button>
+          </div>
         ) : (
           <button
             disabled
-            className=" bg-[#f4f4f5] text-[#AA7600] border border-[#AA7600] whitespace-nowrap w-1/2 md:max-w-1/3 rounded-xl py-2 px-3 flex gap-3 items-center justify-center"
+            className=" bg-[#f4f4f5] text-[#AA7600] border border-[#AA7600] whitespace-nowrap w-1/2 md:max-w-1/3 rounded-xl  px-3 flex gap-3 items-center justify-center"
           >
             <MdArrowBackIosNew />
             Previous Movie
@@ -94,17 +100,18 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
         )}
 
         {nextMovie ? (
-          <Link
-            href={`/movies/${nextMovie}`}
-            className="whitespace-nowrap bg-[#aa7600] w-1/2 md:max-w-1/3 rounded-xl py-2 px-3 flex gap-3 items-center justify-center"
-          >
-            Next Movie
-            <MdArrowForwardIos />
-          </Link>
+          <div className="w-1/2 md:w-1/3">
+            <Button asChild variant={'secondary'} className="w-full text-[#141414] bg-[#aa7600]">
+              <Link href={`/movies/${nextMovie}`}>
+                Next Movie
+                <MdArrowForwardIos />
+              </Link>
+            </Button>
+          </div>
         ) : (
           <button
             disabled
-            className="whitespace-nowrap bg-[#f4f4f5] border-[#aa7600] text-[#aa7600] border w-1/2 md:max-w-1/3 rounded-xl py-2 px-3 flex gap-3 items-center justify-center"
+            className="whitespace-nowrap bg-[#f4f4f5] border-[#aa7600] text-[#aa7600] border w-1/2 md:max-w-1/3 rounded-xl  px-3 flex gap-3 items-center justify-center"
           >
             Next Movie
             <MdArrowForwardIos />
@@ -119,7 +126,7 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
       )}
 
       <div className="relative w-full h-190 bg-[#141414]">
-        <div className="absolute top-0 left-0 w-full h-1/2  ">
+        <div className="absolute left-0 top-0 w-full h-1/2  ">
           <Image
             src={movie.poster}
             alt={movie.title}
@@ -128,16 +135,24 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
           />
           <div className="absolute top-0 left-0 w-full h-full scale-110  bg-linear-to-t from-[#141414] to-transparent" />
         </div>
-        <div className="absolute left-0 top-60 w-full h-125 flex flex-col bg-[#141414] shadow-[4px_8px_20px_-3px_#AA7600] rounded-4xl">
-          <div className=" mx-45 md:mx-50 mt-3 w-1/2 h-1/3 flex flex-col gap-1">
-            <h1 className="text-2xl font-bold text-white ">{movie.title}</h1>
-            <p className="text-white text-xl ">{movie.genres.join(' ')}</p>
-            <p className="flex gap-1 h-1/3 items-center text-white text-lg">
-              <MdStar className="text-[#aa7600] text-sm" />
-              {movie.rating !== null ? movie.rating.toFixed(1) : 'N/A'}
-            </p>
+        <div className="absolute left-0 top-60 w-full h-125 flex flex-col gap-3 px-5 bg-[#141414] shadow-[4px_8px_20px_-3px_#AA7600] rounded-4xl">
+          <div className="relative flex gap-4 items-start ">
+            <div className="relative shrink-0 w-32 h-44 -translate-y-10 rounded-[20px] overflow-hidden">
+              <Image src={movie.poster} alt={movie.title} fill className="object-cover" />
+            </div> 
+
+            <div className="flex-1 min-w-0 flex flex-col gap-2 pt-2">
+              <h1 className="text-2xl font-bold text-white leading-tight">{movie.title}</h1>
+
+              <p className="text-white text-lg wrap-break-word">{movie.genres.join(', ')}</p>
+
+              <p className="flex gap-1 items-center text-white text-lg">
+                <MdStar className="text-[#aa7600] text-sm shrink-0" />
+                {movie.rating !== null ? movie.rating.toFixed(1) : 'N/A'}
+              </p>
+            </div>
           </div>
-          <div className=" flex flex-col gap-5 m-3 h-2/3 justify-evenly text-white text-lg">
+          <div className=" flex flex-col m-3 gap-3  text-white text-lg">
             <p className="">
               <span className="text-gray-400">Director: </span>
               {movie.director}
@@ -153,14 +168,6 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
             <p className="">{movie.description}</p>
           </div>
         </div>
-        <div className="absolute left-8 bottom-90 w-35 h-50">
-          <Image
-            src={movie.poster}
-            alt={movie.title}
-            fill
-            className="object-cover rounded-[20px]"
-          />
-        </div>
       </div>
       <div className="flex flex-col items-center md:flex-row gap-2 text-gray-400 font-semibold">
         Rate this Movie:
@@ -169,7 +176,7 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
             return (
               <button key={button} onClick={() => handleRating(button)}>
                 <TbStarFilled
-                  className={`text-2xl cursor-pointer ${button <= rating ? 'text-[#aa7600]' : 'text-gray-400'}`}
+                  className={`text-2xl cursor-pointer ${button <= rating ? 'text-[#aa7600]' : 'text-gray-400 hover:text-gray-500'}`}
                 />
               </button>
             );
@@ -181,36 +188,40 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
           {ratingError}
         </p>
       )}
-      <button
-        className="flex gap-3 items-center justify-center w-full md:max-w-1/3 py-2 px-3 rounded-xl text-[#aa7600] border border-[#aa7600] cursor-pointer"
-        onClick={handleFavorites}
-      >
-        {isFavoriteMovie ? 'Remove from Favorites' : 'Add to Favorites'}{' '}
-        {isFavoriteMovie ? (
-          <IoMdBookmark className={`text-lg text-[#aa7600]`} />
-        ) : (
-          <IoBookmarkOutline className="text-lg text-[#aa7600]" />
-        )}
-      </button>
-      <Link
-        href={`/movies/${movie.id.toString()}/edit`}
-        className="flex gap-3 items-center justify-center w-full md:max-w-1/3 py-2 px-3 rounded-xl bg-[#aa7600] text-black "
-      >
-        Edit this Movie
-        <FaEdit />
-      </Link>
-      {/* <button
-        className="py-2 px-3 w-1/2 md:max-w-1/4 lg:max-w-1/6 border border-[#aa7600] rounded-xl bg-red-500 hover:bg-red-600 cursor-pointer text-white"
-        onClick={() => handleDelete(movie.id)}
-      >
-        Delete this Movie
-      </button> */}
+      <div className="w-2/3 flex flex-col gap-3 justify-center items-center md:w-1/3">
+        <Button
+          onClick={handleFavorites}
+          variant={'outline'}
+          className="w-full border border-[#aa7600] text-[#aa7600] bg-[#141414]"
+        >
+          {isFavoriteMovie ? 'Remove from Favorites' : 'Add to Favorites'}{' '}
+          {isFavoriteMovie ? (
+            <IoMdBookmark className={`text-lg text-[#aa7600]`} />
+          ) : (
+            <IoBookmarkOutline className="text-lg text-[#aa7600]" />
+          )}
+        </Button>
+
+        <Button
+          asChild
+          variant={'secondary'}
+          size={'lg'}
+          className="w-full bg-[#aa7600] text-[#141414]"
+        >
+          <Link href={`/movies/${movie.id.toString()}/edit`}>
+            Edit this Movie
+            <FaEdit />
+          </Link>
+        </Button>
+      </div>
       <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <button className="py-2 px-3 w-1/2 md:max-w-1/4 lg:max-w-1/6 border border-[#aa7600] rounded-xl bg-red-500 hover:bg-red-600 cursor-pointer text-white">
-            Delete this Movie
-          </button>
-        </AlertDialogTrigger>
+        <div className="w-2/3 md:w-1/3 flex items-center justify-center">
+          <AlertDialogTrigger asChild>
+            <Button variant={'destructive'} size={'lg'} className="w-full">
+              Delete this Movie
+            </Button>
+          </AlertDialogTrigger>
+        </div>
 
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -222,7 +233,10 @@ export function MovieDetail({ movie, prevMovie, nextMovie, relatedMovies }: Movi
 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-500" onClick={() => handleDelete(movie.id)}>
+            <AlertDialogAction
+              className="bg-red-500 hover:bg-red-600"
+              onClick={() => handleDelete(movie.id)}
+            >
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

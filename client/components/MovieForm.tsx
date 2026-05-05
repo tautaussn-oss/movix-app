@@ -1,6 +1,7 @@
 'use client';
 import { MovieFormProps } from '@/types/movies';
-import { GenreMultiSelect } from './GenreMultiSelect';
+// import { GenreMultiSelect } from './GenreMultiSelect';
+import { GenreMultiSelectNew } from './GenreMultiSelectNew';
 import { useEffect, useState } from 'react';
 import { Switch } from './Switch';
 import { createMovie, editMovie } from '@/lib/movies';
@@ -72,78 +73,102 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
   };
 
   return (
-    <form
-      className="flex flex-col items-center md:w-1/2 lg:w-1/3 justify-center p-5 gap-5 md:p-10 border border-gray-700 rounded-xl bg-[#1f1f1f] text-gray-400"
-      onSubmit={handleAddingMovie}
-    >
-      {error && (
-        <p className="text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">
-          {error}
-        </p>
-      )}
-      <div className="w-full flex flex-col gap-2">
-        <label htmlFor="title" className="text-gray-400 text-lg">
-          Movie Name
-        </label>
-        <input
-          type="text"
-          value={movieName}
-          id="title"
-          className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl  "
-          required
-          onChange={(e) => setMovieName(e.target.value)}
-        />
-      </div>
-      <div className="flex flex-col gap-2 w-full">
-        <label htmlFor="director" className="text-gray-400 text-lg">
-          Director
-        </label>
-        <input
-          type="text"
-          id="director"
-          value={director}
-          className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl overflow-hidden"
-          onChange={(e) => setDirector(e.target.value)}
-        />
-      </div>
-      <div className="flex gap-2 w-full">
-        <div className="flex flex-col gap-2 w-1/2">
-          <label htmlFor="duration" className="text-gray-400 text-lg">
-            Duration
+  <form
+    className="w-full max-w-5xl p-5 md:p-8 border border-gray-700 rounded-xl bg-[#1f1f1f] text-gray-400"
+    onSubmit={handleAddingMovie}
+  >
+    {error && (
+      <p className="mb-5 text-red-500 text-center text-sm px-3 py-2 border border-red-500 rounded-xl">
+        {error}
+      </p>
+    )}
+
+    <div className="grid grid-cols-1 md:grid-cols-[1fr_260px] gap-8">
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="title" className="text-gray-400 text-lg">
+            Movie Name
           </label>
           <input
-            type="number"
-            value={duration}
+            type="text"
+            value={movieName}
+            id="title"
+            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl"
             required
-            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl  overflow-hidden"
-            onChange={(e) => setDuration(e.target.value)}
+            onChange={(e) => setMovieName(e.target.value)}
           />
         </div>
-        <div className="flex flex-col gap-2 w-1/2">
-          <label htmlFor="year" className="text-gray-400 text-lg">
-            Year
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="director" className="text-gray-400 text-lg">
+            Director
           </label>
           <input
-            type="number"
-            id="year"
-            value={year}
+            type="text"
+            id="director"
+            value={director}
+            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl"
+            onChange={(e) => setDirector(e.target.value)}
+          />
+        </div>
+
+        <div className="flex gap-3 w-full">
+          <div className="flex flex-col gap-2 w-1/2">
+            <label htmlFor="duration" className="text-gray-400 text-lg">
+              Duration
+            </label>
+            <input
+              type="number"
+              id="duration"
+              value={duration}
+              required
+              className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl"
+              onChange={(e) => setDuration(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 w-1/2">
+            <label htmlFor="year" className="text-gray-400 text-lg">
+              Year
+            </label>
+            <input
+              type="number"
+              id="year"
+              value={year}
+              required
+              className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl"
+              onChange={(e) => setYear(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-gray-400 text-lg">Genre</label>
+          <GenreMultiSelectNew genres={genres} selected={genreArr} onSelect={handleGenres} />
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="description" className="text-gray-400 text-lg">
+            Description
+          </label>
+          <textarea
+            id="description"
+            value={description}
+            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-2xl min-h-32"
+            placeholder="Description"
             required
-            className="px-3 py-2 bg-[#2a2a2a] w-full rounded-xl  overflow-hidden"
-            onChange={(e) => setYear(e.target.value)}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
       </div>
-      <div className="flex flex-col gap-2 w-full">
-        <label className="text-gray-400 text-lg">Genre</label>
-        <GenreMultiSelect genres={genres} selected={genreArr} onSelect={handleGenres} />
-      </div>
-      <div className="">
+
+      <div className="flex flex-col items-center gap-5">
         <label
           htmlFor="poster-upload"
-          className="w-56 h-70 rounded-2xl bg-[#2a2a2a] overflow-hidden cursor-pointer  flex items-center justify-center"
+          className="w-56 h-70 rounded-2xl bg-[#2a2a2a] overflow-hidden cursor-pointer flex items-center justify-center"
         >
           {posterPreview ? (
-            <div className="relative w-full h-full ">
+            <div className="relative w-full h-full">
               <Image
                 src={posterPreview}
                 alt="Poster preview"
@@ -153,40 +178,35 @@ export function MovieForm({ movie, genres }: MovieFormProps) {
               />
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center  text-gray-400 text-center px-4">
+            <div className="flex flex-col items-center justify-center text-gray-400 text-center px-4">
               <span className="font-medium">Upload poster</span>
               <span className="text-sm">Tap to choose an image</span>
             </div>
           )}
         </label>
+
         <input
           type="file"
-          id={'poster-upload'}
+          id="poster-upload"
           className="hidden"
           onChange={(e) => setPoster(e.target.files?.[0] || null)}
         />
-      </div>
-      <div className="flex flex-col gap-3 w-full items-center">
-        <textarea
-          value={description}
-          className="px-3 py-2 bg-[#2a2a2a] w-full rounded-2xl "
-          placeholder="Description"
-          required
-          onChange={(e) => setDescription(e.target.value)}
-        />
+
         <Switch
           id="formswitch"
           label="Featured Movie"
           checked={featured}
           onChange={handleFeatured}
         />
+
         <button
           type="submit"
-          className="rounded-full px-3 py-2 bg-[#aa7600] hover:bg-[#996a00] text-white font-bold"
+          className="w-full rounded-full px-3 py-2 bg-[#aa7600] hover:bg-[#996a00] text-white font-bold"
         >
           Save Movie Details
         </button>
       </div>
-    </form>
-  );
+    </div>
+  </form>
+);
 }

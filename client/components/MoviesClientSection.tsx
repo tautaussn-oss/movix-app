@@ -3,13 +3,16 @@ import { Movie, MovieClientSectionProp } from '@/types/movies';
 
 import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/SearchBar';
-import { SelectBar } from '@/components/SelectBar';
+//import { SelectBar } from '@/components/SelectBar';
+import { SelectBarNew } from '@/components/SelectBarNew';
 import { Switch } from '@/components/Switch';
 import { MovieGrid } from './MovieGrid';
 import { StatusMessage } from './StatusMessage';
 import { getFilteredMovies } from '@/lib/movies';
-import { GenreMultiSelect } from './GenreMultiSelect';
+//import { GenreMultiSelect } from './GenreMultiSelect';
+import { GenreMultiSelectNew } from './GenreMultiSelectNew';
 import Link from 'next/link';
+import { MdOutlineClose } from 'react-icons/md';
 
 const SORTING_OPTIONS = ['title', 'year', 'rating'];
 
@@ -69,6 +72,10 @@ export function MoviesClientSection({
     setFeatured(false);
     setSearchText('');
   };
+  const handleGenreRemoval = (genre: string) => {
+    setSelectedGenres((prev) => prev.filter((g) => g !== genre));
+  };
+  const hasActiveFilters = searchQuery || selectedGenres.length > 0 || sortBy;
 
   if (error) return <StatusMessage type="error" message={error} />;
 
@@ -77,13 +84,24 @@ export function MoviesClientSection({
       <SearchBar searchText={searchText} onSearch={handleSearch} onChange={handleTextChange} />
       <div className="flex flex-col gap-3  w-full md:w-1/2 lg:w-1/3">
         <p className="text-white font-bold">Genre</p>
-        <GenreMultiSelect
+        {/* <GenreMultiSelect
+          genres={genresList}
+          selected={selectedGenres}
+          onSelect={handleGenreFilter}
+        /> */}
+        <GenreMultiSelectNew
           genres={genresList}
           selected={selectedGenres}
           onSelect={handleGenreFilter}
         />
         <p className="text-white font-bold">Sort by</p>
-        <SelectBar
+        {/* <SelectBar
+          placeholder="All"
+          selected={sortBy}
+          options={SORTING_OPTIONS}
+          onSelect={handleSort}
+        /> */}
+        <SelectBarNew
           placeholder="All"
           selected={sortBy}
           options={SORTING_OPTIONS}
@@ -110,6 +128,38 @@ export function MoviesClientSection({
           onChange={handleFeatured}
         />
       </div>
+      {hasActiveFilters && (
+        <div className="text-amber-100 flex gap-3 flex-wrap items-center border border-[#aa7600] px-5 py-3 rounded-xl shadow shadow-[#aa7600]">
+          <span className="font-medium">Active filters:</span>
+          {searchQuery && (
+            <span className="rounded-xl bg-[#aa7600]/60 p-2 flex gap-1 items-center">
+              {searchText}{' '}
+              <MdOutlineClose
+                className="cursor-pointer"
+                onClick={() => {
+                  setSearchText('');
+                  setSearchQuery('');
+                }}
+              />
+            </span>
+          )}
+          {selectedGenres.map((g) => {
+            return (
+              <span key={g} className="rounded-xl bg-[#aa7600]/60 p-2 flex gap-1 items-center">
+                {g}
+                <MdOutlineClose className="cursor-pointer" onClick={() => handleGenreRemoval(g)} />
+              </span>
+            );
+          })}
+          {sortBy && (
+            <span className="rounded-xl bg-[#aa7600]/60 p-2 flex gap-1 items-center">
+              Sorted by: {sortBy}{' '}
+              <MdOutlineClose className="cursor-pointer" onClick={() => setSortBy('')} />
+            </span>
+          )}
+        </div>
+      )}
+
       {movies === null || movies.length === 0 ? (
         <StatusMessage type="empty" message="No movies found!" />
       ) : (
