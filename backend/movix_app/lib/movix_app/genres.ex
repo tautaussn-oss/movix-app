@@ -32,4 +32,14 @@ defmodule MovixApp.Genres do
       _e in Ecto.Query.CastError -> {:error, :invalid_id}
     end
   end
+
+  @doc """
+  Funtion specifially for live view purposes
+  Returns genre names as a list
+  """
+  def genre_names do
+    query = from(g in Genre, order_by: :name, select: g.name)
+
+    Repo.all(query)
+  end
 end

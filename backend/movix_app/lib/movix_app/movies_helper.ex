@@ -16,6 +16,10 @@ defmodule MovixApp.MoviesHelper do
   Directors are unique in database, and if director's consists of more than 2 words
   Name will be one word and all other go into surname field
   """
+  def get_director_by_full_name(full_name) when full_name in ["", nil] do
+    {:error, :empty_name}
+  end
+
   def get_director_by_full_name(full_name) do
     [name | surname_parts] = String.split(full_name, " ", trim: true)
     surname = Enum.join(surname_parts, " ")
@@ -56,6 +60,18 @@ defmodule MovixApp.MoviesHelper do
 
     director_name = Map.get(attrs, "director")
 
+    do_preprocess(director_name, genres_names, attrs)
+  end
+
+  defp do_preprocess("", genres_names, attrs) do
+    genres = get_genres_by_names(genres_names)
+
+    attrs = attrs |> Map.drop(["director", "genres"])
+
+    {:ok, attrs, genres}
+  end
+
+  defp do_preprocess(director_name, genres_names, attrs) do
     with {:ok, director} <- get_director_by_full_name(director_name) do
       genres = get_genres_by_names(genres_names)
 

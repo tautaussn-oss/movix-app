@@ -38,6 +38,10 @@ defmodule MovixAppWeb.Router do
 
     get("/", PageController, :home)
     live("/home", HomeLive)
+    live "/movies", MoviesLive.Index
+    live "/movies/:id", MoviesLive.Show
+    live "/admin/movies/new", MoviesLive.Form, :new
+    live "/admin/movies/:id/edit", MoviesLive.Form, :edit
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

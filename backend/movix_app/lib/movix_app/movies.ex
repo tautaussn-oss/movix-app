@@ -34,6 +34,14 @@ defmodule MovixApp.Movies do
   end
 
   @doc """
+  Function specifically for live view edit and create form
+  to check validation in real time
+  """
+  def change_movie(%Movie{} = movie, attrs \\ %{}) do
+    Movie.changeset(movie, attrs)
+  end
+
+  @doc """
   Returns all Movie structs from database
   """
   def list_all, do: filter_movies(%{})
@@ -103,6 +111,10 @@ defmodule MovixApp.Movies do
 
   defp filter_featured(query, "true") do
     from(movie in query, where: movie.featured == true)
+  end
+
+  defp filter_featured(query, "false") do
+    from(movie in query, where: movie.featured == false)
   end
 
   defp filter_featured(query, _), do: query
@@ -176,7 +188,7 @@ defmodule MovixApp.Movies do
   end
 
   @doc """
-  Returns next movie, basically movie whose id is id-1
+  Returns previous movie, basically movie whose id is id-1
   Returns error, when argument is first id
   """
   def get_prev_movie(id) do

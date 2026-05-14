@@ -5,15 +5,15 @@ defmodule MovixAppWeb.Api.RatingsController do
 
   def create(conn, %{"id" => movie_id, "rating" => rating_value}) do
     case Ratings.add_rating(movie_id, rating_value) do
-      {:ok, msg} ->
+      {:ok, _movie} ->
         conn
         |> put_status(:created)
-        |> json(%{ok: msg})
+        |> json(%{ok: :success})
 
-      {:error, msg} ->
+      {:error, _} ->
         conn
         |> put_status(:not_found)
-        |> json(%{error: msg})
+        |> json(%{error: :not_found})
     end
   end
 end

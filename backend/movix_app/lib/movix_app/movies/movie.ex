@@ -39,7 +39,8 @@ defmodule MovixApp.Movies.Movie do
       :duration,
       :poster,
       :featured,
-      :director_id
+      :director_id,
+      :public_id_cloudinary
     ])
     |> validate_required([
       :title,

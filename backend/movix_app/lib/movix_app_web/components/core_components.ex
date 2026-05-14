@@ -19,6 +19,7 @@ defmodule MovixAppWeb.CoreComponents do
       we build on. You will use it for layout, sizing, flexbox, grid, and
       spacing.
 
+
     * [Heroicons](https://heroicons.com) - see `icon/1` for usage.
 
     * [Phoenix.Component](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) -
@@ -98,7 +99,7 @@ defmodule MovixAppWeb.CoreComponents do
 
     assigns =
       assign_new(assigns, :class, fn ->
-        ["btn", Map.fetch!(variants, assigns[:variant])]
+        ["btn text-center", Map.fetch!(variants, assigns[:variant])]
       end)
 
     if rest[:href] || rest[:navigate] || rest[:patch] do
@@ -206,6 +207,13 @@ defmodule MovixAppWeb.CoreComponents do
   end
 
   def input(%{type: "select"} = assigns) do
+    assigns =
+      if assigns.multiple and not String.ends_with?(assigns.name, "[]") do
+        assign(assigns, :name, assigns.name <> "[]")
+      else
+        assigns
+      end
+
     ~H"""
     <div class="fieldset mb-2">
       <label>
@@ -213,7 +221,10 @@ defmodule MovixAppWeb.CoreComponents do
         <select
           id={@id}
           name={@name}
-          class={[@class || "w-full select", @errors != [] && (@error_class || "select-error")]}
+          class={[
+            @class || "w-full select text-center",
+            @errors != [] && (@error_class || "select-error")
+          ]}
           multiple={@multiple}
           {@rest}
         >
@@ -468,5 +479,58 @@ defmodule MovixAppWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+  end
+
+  attr :for, :any, required: true, doc: "the data structure for the form"
+  attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
+
+  attr :rest, :global,
+    include: ~w(autocomplete name rel action enctype method novalidate target multipart),
+    doc: "the arbitrary HTML attributes to apply to the form tag"
+
+  slot :inner_block, required: true
+  slot :actions, doc: "the slot for form actions, such as a submit button"
+
+  def simple_form(assigns) do
+    ~H"""
+    <.form :let={f} for={@for} as={@as} {@rest}>
+      <div class="mt-10 space-y-8 bg-white">
+        {render_slot(@inner_block, f)}
+        <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
+          {render_slot(action, f)}
+        </div>
+      </div>
+    </.form>
+    """
+  end
+
+  def navbar(assigns) do
+    ~H"""
+    <header class="navbar">
+      <div class="navbar-container">
+        <%!-- <.link patch="/" class="navbar-logo">MovixApp</.link> --%>
+
+        <nav class="navbar-links">
+          <.link navigate="/" class="navbar-link">Home</.link>
+          <.link navigate="/movies" class="navbar-link">Movies</.link>
+          <.link navigate="/admin/movies/new" class="navbar-link">Add New Movie</.link>
+        </nav>
+      </div>
+    </header>
+    """
+  end
+
+  def back(assigns) do
+    ~H"""
+    <div class="mt-16">
+      <.link
+        navigate={@navigate}
+        class="btn"
+      >
+        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+        {render_slot(@inner_block)}
+      </.link>
+    </div>
+    """
   end
 end

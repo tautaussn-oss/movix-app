@@ -100,6 +100,489 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* Make LiveView wrapper divs transparent for layout */
-[data-phx-session], [data-phx-teleported-src] { display: contents }
+[data-phx-session],
+[data-phx-teleported-src] {
+  display: contents
+}
 
 /* This file is for your main application CSS */
+
+.navbar {
+  @apply bg-gray-900 border-b border-gray-800 sticky top-0 z-50;
+}
+
+.navbar-container {
+  @apply max-w-7xl mx-auto h-16 px-6 flex items-center justify-between;
+}
+
+.navbar-logo {
+  @apply text-white text-2xl font-bold tracking-wide no-underline;
+}
+
+.navbar-links {
+  @apply flex items-center gap-8;
+}
+
+.navbar-links a {
+  @apply text-gray-300 font-medium no-underline relative transition-colors duration-200;
+}
+
+.navbar-links a:hover {
+  @apply text-white;
+}
+
+.navbar-links a::after {
+  content: "";
+  @apply absolute left-0 -bottom-1 h-0.5 w-0 bg-sky-400 transition-all duration-200;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
+/* Movie Show Page Styling */
+  .movie {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .movie {
+    padding: 3rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie {
+    padding: 3rem 2rem;
+  }
+}
+
+.movie > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0ea5e9;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.movie > a:hover {
+  color: #06b6d4;
+}
+
+.movie > img {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s;
+  border-radius: 0.5rem;
+}
+
+.movie > img:hover {
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+}
+
+.movie h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f5f5f5;
+  margin-bottom: 1rem;
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 640px) {
+  .movie h1 {
+    font-size: 3.75rem;
+  }
+}
+
+.movie > p {
+  color: #d1d5db;
+  font-size: 1.125rem;
+  line-height: 1.625;
+  margin-bottom: 1rem;
+}
+
+.movie > p:nth-of-type(3) {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+}
+
+/* Ratings Section */
+.ratings {
+  background: linear-gradient(to right, #1f2937, #111827);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 3rem;
+  border: 1px solid #374151;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 640px) {
+  .ratings {
+    padding: 2rem;
+  }
+}
+
+.ratings p:first-child {
+  color: #f3f4f6;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ratings p:first-child::before {
+  content: "⭐";
+  font-size: 1.5rem;
+}
+
+/* Form Styling */
+.ratings .select {
+  width: 100%;
+  background-color: #374151;
+  border: 2px solid #4b5563;
+  border-radius: 0.5rem;
+  color: #f3f4f6;
+  padding: 0.625rem 1rem;
+  transition: border-color 0.2s;
+}
+
+.ratings .select:focus {
+  border-color: #0ea5e9;
+  outline: none;
+}
+
+/* Buttons */
+.ratings button,
+.movie button,
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(to right, #0ea5e9, #0284c7);
+  color: white;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  text-decoration: none;
+
+  /* FIX CENTERING */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ratings button {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.ratings button:hover,
+.movie button:hover,
+.btn:hover {
+  background: linear-gradient(to right, #06b6d4, #0891b2);
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+}
+/* Related Movies */
+.movie h1:nth-of-type(2) {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin-bottom: 2rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 640px) {
+  .movie h1:nth-of-type(2) {
+    font-size: 1.875rem;
+  }
+}
+
+.related_movies {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .related_movies {
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .related_movies {
+    gap: 1.5rem;
+  }
+}
+
+.related_movies > div {
+  cursor: pointer;
+  min-height: 250px;
+}
+
+.related_movies a {
+  text-decoration: none;
+}
+
+.related_movies img {
+  width: 100%;
+  height: 200px;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+
+.related_movies > div:hover img {
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+  transform: scale(1.05);
+}
+
+.related_movies h2 {
+  color: #d1d5db;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+@media (min-width: 640px) {
+  .related_movies h2 {
+    font-size: 1rem;
+  }
+}
+
+.related_movies > div:hover h2 {
+  color: #0ea5e9;
+}
+
+/* Movie Index Page */
+.movie-index {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .movie-index {
+    padding: 3rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-index {
+    padding: 3rem 2rem;
+  }
+}
+
+#filter-form {
+  background-color: #1f2937;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid #374151;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  #filter-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  #filter-form {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+#filter-form .fieldset {
+  margin-bottom: 0;
+}
+
+#filter-form .input,
+#filter-form .select {
+  background-color: #374151;
+  border: 2px solid #4b5563;
+  border-radius: 0.5rem;
+  color: #f3f4f6;
+  transition: border-color 0.2s;
+  padding: 0.625rem;
+}
+
+#filter-form .input:focus,
+#filter-form .select:focus {
+  border-color: #0ea5e9;
+  outline: none;
+}
+
+#filter-form a {
+  background-color: #4b5563;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+@media (min-width: 640px) {
+  #filter-form a {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  #filter-form a {
+    grid-column: span 1;
+  }
+}
+
+#filter-form a:hover {
+  background-color: #6b7280;
+}
+
+.movies {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .movies {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .movies {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .movies {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* Movie Card */
+.card {
+  position: relative;
+  cursor: pointer;
+  height: 100%;
+}
+
+.card img {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+
+@media (min-width: 640px) {
+  .card img {
+    height: 16rem;
+  }
+}
+
+.card:hover img {
+  box-shadow: 0 0 30px rgba(14, 165, 233, 0.5);
+  transform: scale(1.05);
+}
+
+.card h2 {
+  color: #f3f4f6;
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+
+@media (min-width: 640px) {
+  .card h2 {
+    font-size: 1rem;
+  }
+}
+
+.card:hover h2 {
+  color: #0ea5e9;
+}
+
+.card .details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .card .details {
+    font-size: 0.875rem;
+  }
+}
+
+.card .rating {
+  color: #9ca3af;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.card:hover .rating {
+  color: #0ea5e9;
+}
+
+.card .genre {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  color: #0ea5e9;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card:hover .genre {
+  opacity: 1;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 0;
+  color: #9ca3af;
+  font-size: 1.125rem;
+}  

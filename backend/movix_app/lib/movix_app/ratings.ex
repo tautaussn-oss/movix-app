@@ -32,8 +32,11 @@ defmodule MovixApp.Ratings do
       )
 
     case Repo.update_all(query, []) do
-      {1, _} -> {:ok, :success}
-      {0, _} -> {:error, :not_found}
+      {1, _} ->
+        {:ok, Repo.get!(Movie, movie_id)}
+
+      {0, _} ->
+        {:error, :not_found}
     end
   end
 end
