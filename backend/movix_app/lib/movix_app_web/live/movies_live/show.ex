@@ -54,6 +54,9 @@ defmodule MovixAppWeb.MoviesLive.Show do
               <div>
                 <h1 class="text-3xl font-semibold text-slate-900">{@movie.title}</h1>
                 <p class="mt-3 text-sm text-slate-500">Year: {@movie.year}</p>
+                <p class="mt-3 text-sm text-slate-500">
+                  Director: {@movie.director.name} {@movie.director.surname}
+                </p>
               </div>
               <p class="text-slate-700">{@movie.description}</p>
               <div class="grid gap-4 sm:grid-cols-2 items-center rounded-3xl bg-slate-50 p-5 text-slate-700">
